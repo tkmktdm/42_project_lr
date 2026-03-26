@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strupcase.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*   By: hibitakumi <hibitakumi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/24 18:20:02 by htakumi           #+#    #+#             */
-/*   Updated: 2026/03/26 13:08:02 by htakumi          ###   ########.fr       */
+/*   Updated: 2026/03/26 22:35:11 by hibitakumi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@ char	*ft_strupcase(char *str);
 char	*ft_strupcase(char *str)
 {
 	char	*temp;
-	int		diff;
 
 	temp = str;
 	while (*temp)

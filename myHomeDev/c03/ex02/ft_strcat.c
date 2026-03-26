@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strcat.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*   By: hibitakumi <hibitakumi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 09:43:47 by hibitakumi        #+#    #+#             */
-/*   Updated: 2026/03/25 14:07:32 by htakumi          ###   ########.fr       */
+/*   Updated: 2026/03/26 23:28:46 by hibitakumi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ char	*ft_strcat(char *dest, char *src)
 		temp++;
 		src++;
 	}
+	*temp = '\0';
 	return (dest);
 }
 

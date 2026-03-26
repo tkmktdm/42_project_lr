@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strncat.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*   By: hibitakumi <hibitakumi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 13:57:45 by htakumi           #+#    #+#             */
-/*   Updated: 2026/03/25 14:08:28 by htakumi          ###   ########.fr       */
+/*   Updated: 2026/03/26 23:30:21 by hibitakumi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ char	*ft_strncat(char *dest, char *src, unsigned int nb)
 {
 	char	*temp;
 
-	*temp = *dest;
+	temp = dest;
 	while (*temp)
 	{
 		temp++;
@@ -31,6 +31,7 @@ char	*ft_strncat(char *dest, char *src, unsigned int nb)
 		src++;
 		nb--;
 	}
+	*temp = '\0';
 	return (dest);
 }
 
