@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strncat.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hibitakumi <hibitakumi@student.42.fr>      +#+  +:+       +#+        */
+/*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 13:57:45 by htakumi           #+#    #+#             */
-/*   Updated: 2026/03/26 23:30:21 by hibitakumi       ###   ########.fr       */
+/*   Updated: 2026/03/27 09:32:01 by htakumi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,14 +45,16 @@ char	*ft_strncat(char *dest, char *src, unsigned int nb)
 // 	c[2] = 'l';
 // 	c[3] = 'l';
 // 	c[4] = 'o';
+// 	c[5] = '\0';
 // 	c1[0] = 'H';
 // 	c1[1] = 'e';
 // 	c1[2] = 'l';
 // 	c1[3] = 'l';
 // 	c1[4] = 'o';
+// 	c1[5] = '\0';
 // 	strncat(c, "world", 2);
 // 	printf("strncat 2: %s\n", c);
-// 	strncat(c1, "world", 2);
+// 	ft_strncat(c1, "world", 2);
 // 	printf("ft_strncat 2: %s\n", c1);
 // 	return (0);
 // }

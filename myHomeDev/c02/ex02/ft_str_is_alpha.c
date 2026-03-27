@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_str_is_alpha.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hibitakumi <hibitakumi@student.42.fr>      +#+  +:+       +#+        */
+/*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/24 18:20:02 by htakumi           #+#    #+#             */
-/*   Updated: 2026/03/27 07:26:17 by hibitakumi       ###   ########.fr       */
+/*   Updated: 2026/03/27 08:52:15 by htakumi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,8 @@ int	ft_str_is_alpha(char *str)
 	flg = 1;
 	while (*str)
 	{
-		if ((('a' <= *str) && (*str <= 'z')) || (('A' <= *str) && (*str <= 'Z')))
+		if ((('a' <= *str) && (*str <= 'z')) || (('A' <= *str)
+				&& (*str <= 'Z')))
 		{
 			flg = 1;
 			str++;

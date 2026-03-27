@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strncpy.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hibitakumi <hibitakumi@student.42.fr>      +#+  +:+       +#+        */
+/*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/22 14:14:29 by htakumi           #+#    #+#             */
-/*   Updated: 2026/03/27 08:50:52 by hibitakumi       ###   ########.fr       */
+/*   Updated: 2026/03/27 08:52:02 by htakumi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@ char	*ft_strncpy(char *dest, char *src, unsigned int n);
 
 char	*ft_strncpy(char *dest, char *src, unsigned int n)
 {
-	char	*temp;
-	unsigned int		i;
+	char			*temp;
+	unsigned int	i;
 
 	i = 0;
 	temp = dest;
