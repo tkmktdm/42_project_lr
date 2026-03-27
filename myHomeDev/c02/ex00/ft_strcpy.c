@@ -6,7 +6,7 @@
 /*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/22 14:14:29 by htakumi           #+#    #+#             */
-/*   Updated: 2026/03/27 08:52:11 by htakumi          ###   ########.fr       */
+/*   Updated: 2026/03/27 09:06:59 by htakumi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,9 @@ char	*ft_strcpy(char *dest, char *src)
 
 // int	main(void)
 // {
-// 	char	dest[5];
-// 	char	dest2[5];
-// 	char	dest3[5];
+// 	char	dest[10];
+// 	char	dest2[10];
+// 	char	dest3[10];
 
 // 	printf("strcpy---------------------\n");
 // 	strcpy(dest, "Hey");

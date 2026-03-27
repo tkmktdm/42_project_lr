@@ -1,45 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlowcase.c                                    :+:      :+:    :+:   */
+/*   ft_strlen.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/24 18:20:02 by htakumi           #+#    #+#             */
-/*   Updated: 2026/03/27 09:01:24 by htakumi          ###   ########.fr       */
+/*   Created: 2026/03/27 09:37:41 by htakumi           #+#    #+#             */
+/*   Updated: 2026/03/27 09:56:25 by htakumi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 // #include <stdio.h>
 
-char	*ft_strlowcase(char *str);
+int	ft_strlen(char *str);
 
-char	*ft_strlowcase(char *str)
+int	ft_strlen(char *str)
 {
-	char	*temp;
+	int	i;
 
-	temp = str;
-	while (*temp)
+	i = 0;
+	while (*str++)
 	{
-		if (('A' <= *temp) && (*temp <= 'Z'))
-		{
-			*temp += 'a' - 'A';
-		}
-		temp++;
+		i++;
 	}
-	return (str);
+	return (i);
 }
 
 // int	main(void)
 // {
-// 	char	s1[] = "HeLLoWorlD";
-// 	char	s2[] = "helloworld";
-// 	char	s3[] = "HELLO";
-// 	char	s4[] = "Hello2 world";
+// 	int	i;
 
-// 	printf("%s\n", ft_strlowcase(s1));
-// 	printf("%s\n", ft_strlowcase(s2));
-// 	printf("%s\n", ft_strlowcase(s3));
-// 	printf("%s\n", ft_strlowcase(s4));
+// 	i = ft_strlen("HelloWorld12345");
+// 	printf("HelloWorld12345: (15)= %d", i);
 // 	return (0);
 // }

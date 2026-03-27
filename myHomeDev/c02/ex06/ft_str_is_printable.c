@@ -6,7 +6,7 @@
 /*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/24 18:20:02 by htakumi           #+#    #+#             */
-/*   Updated: 2026/03/27 08:52:28 by htakumi          ###   ########.fr       */
+/*   Updated: 2026/03/27 09:13:54 by htakumi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,13 +46,5 @@ int	ft_str_is_printable(char *str)
 // 	printf("Hello world: %d\n", ft_str_is_printable("Hello world"));
 // 	printf("Hello world2: %d\n", ft_str_is_printable("Hello world2"));
 // 	printf("123456: %d\n", ft_str_is_printable("123456"));
-// 	printf("all: %d",
-// 		ft_str_is_printable("123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`
-//      abcdefghijklmnopqrstuvwxyz{|}~"));
-// 	while (i <= 127)
-// 	{
-// 		write(1, &i, 1);
-// 		i++;
-// 	}
 // 	return (0);
 // }
