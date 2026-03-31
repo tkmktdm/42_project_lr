@@ -3,33 +3,42 @@
 /*                                                        :::      ::::::::   */
 /*   ft_sqrt.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*   By: hibitakumi <hibitakumi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/07/15 10:28:23 by jucarra           #+#    #+#             */
-/*   Updated: 2026/03/31 10:47:58 by htakumi          ###   ########.fr       */
+/*   Created: 2019/07/15 10:28:23 by htakumi           #+#    #+#             */
+/*   Updated: 2026/04/01 08:32:26 by hibitakumi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-int	ft_sqrt(int nb)
-{
-	int	i;
+// #include <stdio.h>
 
-	if (nb <= 0)
-	{
-		return (0);
-	}
-	if (nb == 1)
-	{
-		return (1);
-	}
+int ft_sqrt(int nb);
+
+int ft_sqrt(int nb) {
+	int i;
+	
 	i = 0;
+	if (nb < 0) {
+		return 0;
+	}
+	if (nb == 1) {
+		return 1;
+	}
 	while (i <= nb / 2 && i <= 46341)
 	{
-		if (i * i == nb)
-		{
-			return (i);
+		if (i * i == nb) {
+			return i;
 		}
 		i++;
 	}
-	return (0);
+	return 0;
 }
+
+// int main () {
+// 	printf("ft_sqrt: %d\n", ft_sqrt(25));
+// 	printf("ft_sqrt: %d\n", ft_sqrt(0));
+// 	printf("ft_sqrt: %d\n", ft_sqrt(-1));
+// 	printf("ft_sqrt: %d\n", ft_sqrt(1));
+// 	printf("ft_sqrt: %d\n", ft_sqrt(81));
+// 	return 0;
+// }

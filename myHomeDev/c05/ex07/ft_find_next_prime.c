@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_find_next_prime.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*   By: hibitakumi <hibitakumi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/07/15 11:34:58 by jucarra           #+#    #+#             */
-/*   Updated: 2026/03/31 10:48:07 by htakumi          ###   ########.fr       */
+/*   Created: 2019/07/15 11:34:58 by htakumi           #+#    #+#             */
+/*   Updated: 2026/04/01 08:32:38 by hibitakumi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

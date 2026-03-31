@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_iterative_factorial.c                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*   By: htakumi <htakumi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/07/15 10:00:50 by jucarra           #+#    #+#             */
-/*   Updated: 2026/03/31 18:52:37 by htakumi          ###   ########.fr       */
+/*   Created: 2019/07/15 10:00:50 by htakumi           #+#    #+#             */
+/*   Updated: 2026/04/01 08:31:10 by htakumi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
