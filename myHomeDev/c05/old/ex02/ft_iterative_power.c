@@ -1,31 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*   ft_iterative_power.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/29 18:34:43 by htakumi           #+#    #+#             */
-/*   Updated: 2026/03/29 21:56:11 by htakumi          ###   ########.fr       */
+/*   Created: 2019/07/15 10:18:50 by jucarra           #+#    #+#             */
+/*   Updated: 2026/03/31 10:49:10 by htakumi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-// #include <stdio.h>
-
-int	ft_strlen(char *str);
-
-int	ft_strlen(char *str)
+int	ft_iterative_power(int nb, int power)
 {
-	int	len;
+	int	i;
+	int	j;
 
-	len = 0;
-	while (str[len])
-		len++;
-	return (len);
+	i = 1;
+	j = nb;
+	if (power < 0)
+	{
+		return (0);
+	}
+	if (power == 0)
+	{
+		return (1);
+	}
+	while (i < power)
+	{
+		j = j * nb;
+		i++;
+	}
+	return (j);
 }
-
-// int	main(void)
-// {
-// 	printf("%d", ft_strlen("Hello"));
-// 	return (0);
-// }

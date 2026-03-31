@@ -5,52 +5,41 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/27 09:44:20 by htakumi           #+#    #+#             */
-/*   Updated: 2026/03/27 10:13:33 by htakumi          ###   ########.fr       */
+/*   Created: 2026/03/29 21:57:32 by htakumi           #+#    #+#             */
+/*   Updated: 2026/03/30 18:38:22 by htakumi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+// #include <stdio.h>
+// #include <string.h>
 #include <unistd.h>
 
 void	ft_putnbr(int nb);
 
 void	ft_putnbr(int nb)
 {
-	char	n;
+	long	n;
 
-	if (nb < 0)
+	n = nb;
+	if (n < 0)
 	{
 		write(1, "-", 1);
-		nb = -nb;
+		n = -n;
 	}
-	if (nb / 10 != 0)
+	if (n > 9)
 	{
-		ft_putnbr(nb / 10);
+		ft_putnbr(n / 10);
 	}
-	n = nb % 10 + '0';
+	n = (n % 10) + '0';
 	write(1, &n, 1);
 }
 
-int	main(void)
-{
-	ft_putnbr(420000);
-	write(1, "\n", 1);
-	ft_putnbr(-42);
-	write(1, "\n", 1);
-	ft_putnbr(__INT_MAX__);
-	write(1, "\n", 1);
-	ft_putnbr(-__INT_MAX__);
-	write(1, "\n", 1);
-	ft_putnbr(4.2);
-	// write(1, "\n", 1);
-	// ft_putnbr(11);
-	// write(1, "\n", 1);
-	// ft_putnbr(3);
-	// write(1, "\n", 1);
-	// ft_putnbr(0);
-	// write(1, "\n", 1);
-	// ft_putnbr(199);
-	// write(1, "\n", 1);
-	// ft_putnbr(1);
-	return (0);
-}
+// int	main(void)
+// {
+// 	ft_putnbr(42);
+// 	write(1, "\n", 1);
+// 	ft_putnbr(__INT_MAX__);
+// 	write(1, "\n", 1);
+// 	ft_putnbr(-(__INT_MAX__));
+// 	return (0);
+// }

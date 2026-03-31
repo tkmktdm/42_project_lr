@@ -6,26 +6,27 @@
 /*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/15 10:21:47 by jucarra           #+#    #+#             */
-/*   Updated: 2026/03/31 10:49:12 by htakumi          ###   ########.fr       */
+/*   Updated: 2026/03/31 19:37:58 by htakumi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+// #include <stdio.h>
+
 int	ft_recursive_power(int nb, int power)
 {
-	int	i;
-
-	i = nb;
 	if (power < 0)
-	{
 		return (0);
-	}
-	else if (power == 0)
-	{
+	if (power == 0)
 		return (1);
-	}
-	else if (power > 0)
-	{
-		return (nb * ft_recursive_power(nb, power - 1));
-	}
-	return (nb);
+	return (nb * ft_recursive_power(nb, power - 1));
 }
+
+// int	main(void)
+// {
+// 	printf("5**0 = %d\n", ft_recursive_power(5, 0));
+// 	printf("5**1 = %d\n", ft_recursive_power(5, 1));
+// 	printf("5**2 = %d\n", ft_recursive_power(5, 2));
+// 	printf("5**3 = %d\n", ft_recursive_power(5, 3));
+// 	printf("5**4 = %d\n", ft_recursive_power(5, 4));
+// 	return (0);
+// }

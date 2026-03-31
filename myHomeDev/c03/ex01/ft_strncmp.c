@@ -6,7 +6,7 @@
 /*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/24 23:54:37 by hibitakumi        #+#    #+#             */
-/*   Updated: 2026/03/25 11:30:07 by htakumi          ###   ########.fr       */
+/*   Updated: 2026/03/29 21:15:52 by htakumi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,11 @@ int	ft_strncmp(char *s1, char *s2, unsigned int n)
 	{
 		if (*s1 > *s2)
 		{
-			return (1);
+			return (*s1 - *s2);
 		}
 		else if (*s1 < *s2)
 		{
-			return (-1);
+			return (*s1 - *s2);
 		}
 		s1++;
 		s2++;

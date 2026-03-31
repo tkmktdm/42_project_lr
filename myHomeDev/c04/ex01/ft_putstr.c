@@ -5,26 +5,29 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/27 09:40:33 by htakumi           #+#    #+#             */
-/*   Updated: 2026/03/27 09:56:56 by htakumi          ###   ########.fr       */
+/*   Created: 2026/03/29 18:57:31 by htakumi           #+#    #+#             */
+/*   Updated: 2026/03/29 21:55:07 by htakumi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-// #include <unistd.h>
+#include <unistd.h>
 
 void	ft_putstr(char *str);
 
 void	ft_putstr(char *str)
 {
-	while (*str)
+	int	i;
+
+	i = 0;
+	while (str[i] != '\0')
 	{
-		write(1, str, 1);
-		str++;
+		write(1, &str[i], 1);
+		i++;
 	}
 }
 
 // int	main(void)
 // {
-// 	ft_putstr("Hello world !!!! \n 42 tokyo is shinzyuku \0");
+// 	ft_putstr("hello wolrd");
 // 	return (0);
 // }

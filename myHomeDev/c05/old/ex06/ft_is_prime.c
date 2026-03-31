@@ -1,31 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*   ft_is_prime.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/29 18:34:43 by htakumi           #+#    #+#             */
-/*   Updated: 2026/03/29 21:56:11 by htakumi          ###   ########.fr       */
+/*   Created: 2019/07/15 10:38:56 by jucarra           #+#    #+#             */
+/*   Updated: 2026/03/31 10:49:19 by htakumi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-// #include <stdio.h>
-
-int	ft_strlen(char *str);
-
-int	ft_strlen(char *str)
+int	ft_is_prime(int nb)
 {
-	int	len;
+	int	i;
 
-	len = 0;
-	while (str[len])
-		len++;
-	return (len);
+	i = 2;
+	while (nb % i != 0)
+	{
+		if (i > nb)
+			break ;
+		i++;
+	}
+	if (nb == i)
+	{
+		return (1);
+	}
+	return (0);
 }
-
-// int	main(void)
-// {
-// 	printf("%d", ft_strlen("Hello"));
-// 	return (0);
-// }

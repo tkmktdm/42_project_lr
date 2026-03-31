@@ -1,31 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*   ft_sqrt.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/29 18:34:43 by htakumi           #+#    #+#             */
-/*   Updated: 2026/03/29 21:56:11 by htakumi          ###   ########.fr       */
+/*   Created: 2019/07/15 10:28:23 by jucarra           #+#    #+#             */
+/*   Updated: 2026/03/31 10:49:17 by htakumi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-// #include <stdio.h>
-
-int	ft_strlen(char *str);
-
-int	ft_strlen(char *str)
+int	ft_sqrt(int nb)
 {
-	int	len;
+	int	i;
 
-	len = 0;
-	while (str[len])
-		len++;
-	return (len);
+	if (nb <= 0)
+	{
+		return (0);
+	}
+	if (nb == 1)
+	{
+		return (1);
+	}
+	i = 0;
+	while (i <= nb / 2 && i <= 46341)
+	{
+		if (i * i == nb)
+		{
+			return (i);
+		}
+		i++;
+	}
+	return (0);
 }
-
-// int	main(void)
-// {
-// 	printf("%d", ft_strlen("Hello"));
-// 	return (0);
-// }

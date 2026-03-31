@@ -6,7 +6,7 @@
 /*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/24 22:57:36 by hibitakumi        #+#    #+#             */
-/*   Updated: 2026/03/25 13:38:52 by htakumi          ###   ########.fr       */
+/*   Updated: 2026/03/31 21:04:53 by htakumi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,11 @@ int	ft_strcmp(char *s1, char *s2)
 	{
 		if (*s1 > *s2)
 		{
-			return (1);
+			return (*s1 - *s2);
 		}
 		else if (*s2 > *s1)
 		{
-			return (-1);
+			return (*s1 - *s2);
 		}
 		s1++;
 		s2++;
@@ -35,7 +35,7 @@ int	ft_strcmp(char *s1, char *s2)
 
 // int	main(void)
 // {
-// 	int i;
+// 	int	i;
 
 // 	// 完全一致なので0
 // 	i = strcmp("hello", "hello");
@@ -48,8 +48,7 @@ int	ft_strcmp(char *s1, char *s2)
 // 	printf("hello -1: %d\n", i);
 // 	// 第一引数の最後の文字('\0'=0)が第二引数('l')よりも辞書順で前に来るので負の値(-1)
 // 	i = strcmp("he -1", "hello");
-// 	printf("he: %d\n", i);
-
+// 	printf("he-1: %d\n", i);
 // 	// 完全一致なので0
 // 	i = ft_strcmp("hello", "hello");
 // 	printf("hello 0: %d\n", i);

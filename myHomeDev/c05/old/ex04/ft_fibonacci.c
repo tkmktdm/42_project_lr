@@ -1,31 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*   ft_fibonacci.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/29 18:34:43 by htakumi           #+#    #+#             */
-/*   Updated: 2026/03/29 21:56:11 by htakumi          ###   ########.fr       */
+/*   Created: 2019/07/15 10:24:36 by jucarra           #+#    #+#             */
+/*   Updated: 2026/03/31 10:49:14 by htakumi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-// #include <stdio.h>
-
-int	ft_strlen(char *str);
-
-int	ft_strlen(char *str)
+int	ft_fibonacci(int index)
 {
-	int	len;
-
-	len = 0;
-	while (str[len])
-		len++;
-	return (len);
+	if (index < 0)
+	{
+		return (-1);
+	}
+	else if (index == 0)
+	{
+		return (0);
+	}
+	else if (index == 1)
+	{
+		return (1);
+	}
+	else
+	{
+		return (ft_fibonacci(index - 2) + ft_fibonacci(index - 1));
+	}
+	return (0);
 }
-
-// int	main(void)
-// {
-// 	printf("%d", ft_strlen("Hello"));
-// 	return (0);
-// }

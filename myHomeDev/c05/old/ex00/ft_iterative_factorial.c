@@ -1,34 +1,45 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_recursive_factorial.c                           :+:      :+:    :+:   */
+/*   ft_iterative_factorial.c                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/07/15 10:08:35 by jucarra           #+#    #+#             */
-/*   Updated: 2026/03/31 18:52:18 by htakumi          ###   ########.fr       */
+/*   Created: 2019/07/15 10:00:50 by jucarra           #+#    #+#             */
+/*   Updated: 2026/03/31 10:46:22 by htakumi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-// #include <stdio.h>
+#include <stdio.h>
 
 int	ft_iterative_factorial(int nb)
 {
-	if (nb < 0)
+	int	i;
+
+	i = nb;
+	if (nb < 0 || nb > 12)
+	{
 		return (0);
-	if (nb == 1 || nb == 0)
+	}
+	else if (nb == 0 || nb == 1)
+	{
 		return (1);
-	return (nb * ft_iterative_factorial(nb - 1));
+	}
+	while (i > 1)
+	{
+		nb = nb * (i - 1);
+		i--;
+	}
+	return (nb);
 }
 
-// int	main(void)
-// {
+// int main () {
 // 	printf("3!: %d\n", ft_iterative_factorial(3));
 // 	printf("-3!: %d\n", ft_iterative_factorial(-3));
-// 	printf("5!: %d\n", ft_iterative_factorial(5));
+// 	printf("1!: %d\n", ft_iterative_factorial(1));
 // 	printf("12!: %d\n", ft_iterative_factorial(12));
 // 	printf("13!: %d\n", ft_iterative_factorial(13));
+// 	printf("-4!: %d\n", ft_iterative_factorial(-4));
 // 	printf("0!: %d\n", ft_iterative_factorial(0));
-// 	printf("1!: %d\n", ft_iterative_factorial(1));
 // 	return (0);
 // }
