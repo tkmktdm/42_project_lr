@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   ft_iterative_power.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jucarra <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/15 10:18:50 by jucarra           #+#    #+#             */
-/*   Updated: 2019/07/15 10:20:06 by jucarra          ###   ########.fr       */
+/*   Updated: 2026/03/31 10:49:10 by htakumi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 int	ft_iterative_power(int nb, int power)
 {
 	int	i;
-	int j;
+	int	j;
 
 	i = 1;
 	j = nb;

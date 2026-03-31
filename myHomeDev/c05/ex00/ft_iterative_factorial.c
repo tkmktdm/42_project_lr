@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_iterative_factorial.c                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hibitakumi <hibitakumi@student.42.fr>      +#+  +:+       +#+        */
+/*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/15 10:00:50 by jucarra           #+#    #+#             */
-/*   Updated: 2026/03/31 08:40:52 by hibitakumi       ###   ########.fr       */
+/*   Updated: 2026/03/31 10:46:22 by htakumi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,15 @@
 
 int	ft_iterative_factorial(int nb)
 {
-	int i;
+	int	i;
 
 	i = nb;
-	if (nb < 0 || nb > 12) {
-		return 0;
-	} else if (nb == 0 || nb == 1) {
+	if (nb < 0 || nb > 12)
+	{
+		return (0);
+	}
+	else if (nb == 0 || nb == 1)
+	{
 		return (1);
 	}
 	while (i > 1)
@@ -27,7 +30,7 @@ int	ft_iterative_factorial(int nb)
 		nb = nb * (i - 1);
 		i--;
 	}
-	return nb;
+	return (nb);
 }
 
 // int main () {
@@ -38,5 +41,5 @@ int	ft_iterative_factorial(int nb)
 // 	printf("13!: %d\n", ft_iterative_factorial(13));
 // 	printf("-4!: %d\n", ft_iterative_factorial(-4));
 // 	printf("0!: %d\n", ft_iterative_factorial(0));
-// 	return 0;
+// 	return (0);
 // }

@@ -1,29 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_is_prime.c                                      :+:      :+:    :+:   */
+/*   cleanup.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*   By: kazonode <kazonode@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/07/15 10:38:56 by jucarra           #+#    #+#             */
-/*   Updated: 2026/03/31 10:49:19 by htakumi          ###   ########.fr       */
+/*   Created: 2026/03/28 22:45:18 by kazonode          #+#    #+#             */
+/*   Updated: 2026/03/29 17:55:53 by kazonode         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-int	ft_is_prime(int nb)
-{
-	int	i;
+#include <stdlib.h>
 
-	i = 2;
-	while (nb % i != 0)
-	{
-		if (i > nb)
-			break ;
-		i++;
-	}
-	if (nb == i)
-	{
-		return (1);
-	}
-	return (0);
+extern int	*g_grid;
+extern int	*g_hints;
+extern int	g_size;
+
+void	cleanup(void)
+{
+	free(g_grid);
+	free(g_hints);
 }
