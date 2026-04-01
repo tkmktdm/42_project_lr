@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_recursive_power.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hibitakumi <hibitakumi@student.42.fr>      +#+  +:+       +#+        */
+/*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/15 10:21:47 by htakumi           #+#    #+#             */
-/*   Updated: 2026/04/01 08:32:15 by hibitakumi       ###   ########.fr       */
+/*   Updated: 2026/04/01 10:56:02 by htakumi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,11 @@ int	ft_recursive_power(int nb, int power)
 		return (0);
 	if (power == 0)
 		return (1);
-	if (power > 1) {
+	if (power > 1)
+	{
 		return (nb * ft_recursive_power(nb, power - 1));
 	}
-	return nb;
+	return (nb);
 }
 
 // int	main(void)

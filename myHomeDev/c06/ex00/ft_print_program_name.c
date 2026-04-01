@@ -5,23 +5,26 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/27 11:02:38 by htakumi           #+#    #+#             */
-/*   Updated: 2026/03/27 11:13:52 by htakumi          ###   ########.fr       */
+/*   Created: 2026/04/01 11:14:18 by htakumi           #+#    #+#             */
+/*   Updated: 2026/04/01 11:29:06 by htakumi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
 
+void	ft_putchar(char c)
+{
+	write(1, &c, 1);
+}
+
 int	main(int ac, char **av)
 {
-	int	i;
-
-	i = 0;
-	while (av[0][i])
+	ac = 0;
+	while (*av[ac] != '\0')
 	{
-		write(1, &av[0][i], 1);
-		i++;
+		ft_putchar(*av[ac]);
+		av[ac]++;
 	}
-	write(1, "\n", 1);
+	ft_putchar('\n');
 	return (0);
 }

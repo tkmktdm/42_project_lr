@@ -3,40 +3,56 @@
 /*                                                        :::      ::::::::   */
 /*   ft_find_next_prime.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hibitakumi <hibitakumi@student.42.fr>      +#+  +:+       +#+        */
+/*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/15 11:34:58 by htakumi           #+#    #+#             */
-/*   Updated: 2026/04/01 08:32:38 by hibitakumi       ###   ########.fr       */
+/*   Updated: 2026/04/01 10:57:14 by htakumi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+// #include <stdio.h>
 
 int	ft_is_prime(int nb)
 {
 	int	i;
 
 	i = 2;
-	while (nb % i != 0)
+	if (nb < 2)
+		return (0);
+	if (nb == 2)
+		return (1);
+	while (i * i <= nb)
 	{
-		if (i > nb)
-			break ;
+		if (nb % i == 0)
+			return (0);
 		i++;
 	}
-	if (nb == i)
-	{
-		return (1);
-	}
-	return (0);
+	return (1);
 }
 
 int	ft_find_next_prime(int nb)
 {
 	int	i;
 
-	i = 2;
-	while (1 && nb < 2147483647)
+	while (nb < 2147483647)
 	{
-		if (ft_is_prime(nb))
+		i = ft_is_prime(nb);
+		if (i == 1)
+		{
 			return (nb);
+		}
 		nb++;
 	}
+	return (0);
 }
+
+// int	main(void)
+// {
+// 	printf("%d\n", ft_find_next_prime(2));
+// 	printf("%d\n", ft_find_next_prime(12));
+// 	printf("%d\n", ft_find_next_prime(15));
+// 	printf("%d\n", ft_find_next_prime(0));
+// 	printf("%d\n", ft_find_next_prime(1));
+// 	printf("%d\n", ft_find_next_prime(-5));
+// 	return (0);
+// }

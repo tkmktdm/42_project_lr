@@ -3,20 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   ft_iterative_power.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hibitakumi <hibitakumi@student.42.fr>      +#+  +:+       +#+        */
+/*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/15 10:18:50 by htakumi           #+#    #+#             */
-/*   Updated: 2026/04/01 08:32:12 by hibitakumi       ###   ########.fr       */
+/*   Updated: 2026/04/01 10:55:26 by htakumi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 // #include <stdio.h>
 
-int	ft_iterative_power(int nb, int power);
-
 int	ft_iterative_power(int nb, int power)
 {
-	int base;
+	int	base;
+
 	base = nb;
 	if (power < 0)
 		return (0);
