@@ -1,0 +1,6 @@
+ft_atoi
+ft_putnbr
+ft_strcpy / strcmp
+ft_strlen
+repeat_alpha / rot13 系
+last_word / first_word
