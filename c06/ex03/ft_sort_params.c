@@ -6,11 +6,11 @@
 /*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 11:52:05 by htakumi           #+#    #+#             */
-/*   Updated: 2026/04/02 12:44:37 by htakumi          ###   ########.fr       */
+/*   Updated: 2026/04/02 15:56:56 by htakumi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
+// #include <stdio.h>
 #include <unistd.h>
 
 void	ft_putchar(char c)
@@ -36,7 +36,7 @@ int	ft_strcmp(char *s1, char *s2)
 	return (0);
 }
 
-void	sort(int ac, char **av)
+void	ft_sort_char(int ac, char **av)
 {
 	int		i;
 	int		j;
@@ -48,7 +48,6 @@ void	sort(int ac, char **av)
 		j = i + 1;
 		while (j < ac)
 		{
-			printf("%s vs %s: %d\n", av[i], av[j], ft_strcmp(av[i], av[j]));
 			if (ft_strcmp(av[i], av[j]) > 0)
 			{
 				temp = av[i];
@@ -67,12 +66,11 @@ int	main(int ac, char **av)
 	int	j;
 
 	i = 1;
-	j = 0;
-	sort(ac, av);
+	ft_sort_char(ac, av);
 	while (i < ac)
 	{
 		j = 0;
-		while (av[i][j])
+		while (av[i][j] != '\0')
 		{
 			ft_putchar(av[i][j]);
 			j++;

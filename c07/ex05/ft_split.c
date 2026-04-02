@@ -3,22 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hibitakumi <hibitakumi@student.42.fr>      +#+  +:+       +#+        */
+/*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 11:52:05 by htakumi           #+#    #+#             */
-/*   Updated: 2026/04/01 22:54:52 by hibitakumi       ###   ########.fr       */
+/*   Updated: 2026/04/02 20:13:08 by htakumi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdio.h>
 #include <unistd.h>
 
-char **ft_split(char *str, char *charset)
+char	**ft_split(char *str, char *charset)
 {
-	return "a";
+	return ("a");
 }
 
-int	main(int ac, char **av)
+int	main(void)
 {
 	return (0);
 }
