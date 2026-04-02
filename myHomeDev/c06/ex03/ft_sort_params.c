@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_sort_params.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*   By: hibitakumi <hibitakumi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 11:52:05 by htakumi           #+#    #+#             */
-/*   Updated: 2026/04/01 13:00:54 by htakumi          ###   ########.fr       */
+/*   Updated: 2026/04/02 09:07:13 by hibitakumi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,24 +36,24 @@ int	ft_strcmp(char *s1, char *s2)
 	return (0);
 }
 
-void	ft_sort_char(int n, char **c)
+void	sort(int ac, char **av)
 {
 	int		i;
 	int		j;
 	char	*temp;
 
 	i = 1;
-	while (i < n)
+	while (i < ac - 1)
 	{
-		j = 0;
-		while (j <= n - 1)
+		j = i + 1;
+		while (j < ac)
 		{
-			printf("%s vs %s: %d\n", c[2], c[2], ft_strcmp(c[i], c[j]));
-			if (ft_strcmp(c[i], c[j]))
+			printf("%s vs %s: %d\n", av[2], av[2], ft_strcmp(av[i], av[j]));
+			if (ft_strcmp(av[i], av[j]) > 0)
 			{
-				temp = c[i];
-				c[i] = c[j];
-				c[j] = temp;
+				temp = av[i];
+				av[i] = av[j];
+				av[j] = temp;
 			}
 			j++;
 		}
@@ -64,25 +64,20 @@ void	ft_sort_char(int n, char **c)
 int	main(int ac, char **av)
 {
 	int		i;
-	char	**args;
+	int j;
 
-	i = 0;
-	while (i < av[i])
+	i = 1;
+	j = 0;
+	sort(ac, av);
+	while (i < ac)
 	{
-		printf("av: %s\n", av[i]);
-		*args = av[i];
-		printf("args: %s\n", args[i]);
-		args++;
+		j = 0;
+		while(av[i][j]) {
+			ft_putchar(av[i][j]);
+			j++;
+		}
+		ft_putchar('\n');
 		i++;
 	}
-	// if (ac > 1)
-	// 	av[i]++;
-	// ac = ac - 1;
-	// ft_sort_char(ac, av);
-	// while (i < ac)
-	// {
-	// 	printf("%s\n", av[i]);
-	// 	i++;
-	// }
 	return (0);
 }
