@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_sort_params.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hibitakumi <hibitakumi@student.42.fr>      +#+  +:+       +#+        */
+/*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 11:52:05 by htakumi           #+#    #+#             */
-/*   Updated: 2026/04/02 09:07:13 by hibitakumi       ###   ########.fr       */
+/*   Updated: 2026/04/02 12:44:37 by htakumi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	sort(int ac, char **av)
 		j = i + 1;
 		while (j < ac)
 		{
-			printf("%s vs %s: %d\n", av[2], av[2], ft_strcmp(av[i], av[j]));
+			printf("%s vs %s: %d\n", av[i], av[j], ft_strcmp(av[i], av[j]));
 			if (ft_strcmp(av[i], av[j]) > 0)
 			{
 				temp = av[i];
@@ -63,8 +63,8 @@ void	sort(int ac, char **av)
 
 int	main(int ac, char **av)
 {
-	int		i;
-	int j;
+	int	i;
+	int	j;
 
 	i = 1;
 	j = 0;
@@ -72,7 +72,8 @@ int	main(int ac, char **av)
 	while (i < ac)
 	{
 		j = 0;
-		while(av[i][j]) {
+		while (av[i][j])
+		{
 			ft_putchar(av[i][j]);
 			j++;
 		}
