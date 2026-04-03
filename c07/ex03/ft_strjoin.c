@@ -6,7 +6,7 @@
 /*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 11:52:05 by htakumi           #+#    #+#             */
-/*   Updated: 2026/04/02 20:13:14 by htakumi          ###   ########.fr       */
+/*   Updated: 2026/04/03 11:01:46 by htakumi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,56 +23,60 @@ int	ft_strlen(char *str)
 	return (i);
 }
 
+char	*ft_strcpy(char *dest, char *src)
+{
+	char	*temp;
+
+	temp = dest;
+	while (*src)
+	{
+		*temp = *src;
+		temp++;
+		src++;
+	}
+	*temp = '\0';
+	return (dest);
+}
+
 char	*ft_strjoin(int size, char **strs, char *sep)
 {
 	int		i;
-	int		j;
-	int		strs_size;
-	int		sep_size;
+	int		len;
 	char	*dest;
+	char	*ptr;
 
-	i = 0;
-	strs_size = 0;
-	sep_size = 0;
-	if (size == 0)
-		return ("");
-	while (i < size)
+	i = -1;
+	len = (size > 0) * ft_strlen(sep) * (size - 1);
+	while (++i < size)
+		len += ft_strlen(strs[i]);
+	dest = malloc(len + 1);
+	dest[0] = '\0';
+	ptr = dest;
+	i = -1;
+	while (++i < size)
 	{
-		printf("%s\n", strs[i]);
-		strs_size += ft_strlen(strs[i]);
-		i++;
-	}
-	sep_size = ft_strlen(sep);
-	printf("%d\n", strs_size);
-	dest = malloc(sizeof(char) * strs_size * (size * sep_size) + 1);
-	i = 0;
-	while (i < size)
-	{
-		j = 0;
-		dest[i] = *strs[i];
-		while (sep[j] == '\0')
+		ft_strcpy(ptr, strs[i]);
+		ptr += ft_strlen(strs[i]);
+		if (i < size - 1)
 		{
-			dest[i] += sep[j];
-			j++;
+			ft_strcpy(ptr, sep);
+			ptr += ft_strlen(sep);
 		}
-		i++;
 	}
 	return (dest);
 }
 
 int	main(void)
 {
-	char	*strs[2];
+	char	*args[2] = {"hello", "world"};
 	char	*sep;
-	char	*result;
+	char	*str;
 	int		size;
 
-	strs[0] = "hello";
-	strs[1] = "world";
-	sep = "!";
+	sep = "!!";
 	size = 2;
-	result = ft_strjoin(size, strs, sep);
-	printf("%s\n", result);
-	free(result);
+	str = ft_strjoin(size, args, sep);
+	printf("ft_strjoin: %s\n", str);
+	free(str);
 	return (0);
 }
