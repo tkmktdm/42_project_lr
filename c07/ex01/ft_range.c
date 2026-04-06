@@ -6,7 +6,7 @@
 /*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 11:29:45 by htakumi           #+#    #+#             */
-/*   Updated: 2026/04/02 18:26:29 by htakumi          ###   ########.fr       */
+/*   Updated: 2026/04/06 22:42:21 by htakumi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,19 +15,20 @@
 
 int	*ft_range(int min, int max)
 {
-	int	range;
 	int	*list;
 	int	i;
 
 	i = 0;
-	range = max - min;
-	if (range < 1)
+	if (min >= max)
 		return (NULL);
-	list = malloc(sizeof(int) * range);
-	while (i < range)
+	list = (int *)malloc(sizeof(int) * (max - min));
+	if (!list)
+		return (NULL);
+	while (min < max)
 	{
-		list[i] = min + i;
+		list[i] = min;
 		i++;
+		min++;
 	}
 	return (list);
 }
