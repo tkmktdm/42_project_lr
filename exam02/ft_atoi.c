@@ -1,64 +1,26 @@
 int ft_atoi(char *str);
 
-// int ft_atoi(char *str) {
-//     int pf;
-//     int mf;
-//     long res;
-
-//     pf = 0;
-//     mf = 0;
-//     res = 0;
-//     while (*str) {
-//         if (!(*str >= '0' && *str <= '9' || *str == ' ' || *str >= 9 && *str <= 13 || *str == '+' || *str == '-')) {
-//             if (mf) {
-//                 res = -res;
-//             }
-//             return res;
-//         }
-//         if (*str == '+') {
-//             pf += 1;
-//         } else if (*str == '-') {
-//             mf += 1;
-//         }
-//         if (pf > 1 || mf > 1) {
-//             return 0;
-//         }
-//         if (*str >= '0' && *str <= '9') {
-//             res = res * 10 + (*str - '0');
-//         }
-//         str++;
-//     }
-//     if (mf) {
-//         res = -res;
-//     }
-//     return res;
-// }
-
-int ft_atoi(char *str)
-{
-    int sign = 1;
-    long res = 0;
-
-    // 空白スキップ
-    while (*str == ' ' || (*str >= 9 && *str <= 13))
-        str++;
-
-    // 符号
-    if (*str == '+' || *str == '-')
-    {
-        if (*str == '-')
+int ft_atoi(char *str) {
+    int i;
+    int sign;
+    long n;
+    i = 0;
+    sign = 1;
+    n = 0;
+    while (str[i] == ' ' || str[i] <= '\r' && str[i] >= '\t') {
+        i++;
+    }
+    if (str[i] == '+' || str[i] == '-') {
+        if (str[i] == '-') {
             sign = -1;
-        str++;
+        }
+        i++;
     }
-
-    // 数字
-    while (*str >= '0' && *str <= '9')
-    {
-        res = res * 10 + (*str - '0');
-        str++;
+    while (str[i] >= '0' && str[i] <= '9') {
+        n = n * 10 + str[i] - '0';
+        i++;
     }
-
-    return res * sign;
+    return n * sign;
 }
 
 #include <stdlib.h>
@@ -71,6 +33,8 @@ int main() {
     printf("A%d\n", atoi(" -123a"));
     printf("A%d\n", atoi("  -123a"));
     printf("A%d\n", atoi("  +-123a"));
+    printf("A%d\n", atoi("  ++123a"));
+
     printf("ft_atoi------------------\n");
     printf("A%d\n", ft_atoi("+123a"));
     printf("A%d\n", ft_atoi("-123a"));
@@ -78,6 +42,7 @@ int main() {
     printf("A%d\n", ft_atoi(" +123a"));
     printf("A%d\n", ft_atoi(" -123a"));
     printf("A%d\n", ft_atoi("  -123a"));
-    printf("A%d\n", atoi("  +-123a"));
+    printf("A%d\n", ft_atoi("  +-123a"));
+    printf("A%d\n", ft_atoi("  ++123a"));
     return 0;
 }

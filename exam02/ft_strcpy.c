@@ -4,7 +4,7 @@ char *ft_strcpy(char *dest, char *src) {
     char *temp;
 
     temp = dest;
-    while (*src != '\0') {
+    while (*src) {
         *temp = *src;
         temp++;
         src++;
@@ -12,13 +12,13 @@ char *ft_strcpy(char *dest, char *src) {
     *temp = '\0'; 
     return dest;
 }
-// #include <stdio.h>
-// int main() {
-//     char dest[20] = "hello";
-//     ft_strcpy(dest, "world");
-//     printf("%s\n", dest);
-//     return 0;
-// }
+#include <stdio.h>
+int main() {
+    char dest[20] = "hello";
+    ft_strcpy(dest, "world");
+    printf("%s\n", dest);
+    return 0;
+}
 
 /*
 ポインタで回す場合
