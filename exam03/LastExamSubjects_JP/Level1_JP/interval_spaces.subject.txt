@@ -1,0 +1,14 @@
+Assignment name  : interval_spaces
+Expected files   : interval_spaces.c
+Allowed functions: write
+--------------------------------------------------------------------------------
+
+引数中の各文字の間に半角スペースを 3 つ挿入して出力するプログラムを作成してください。
+
+引数の数が 2 でない場合、プログラムは改行を返します。
+
+$> ./interval_spaces "abc" | cat -e
+a   b   c$
+$> ./interval_spaces "dubO a POIL" "ok" | cat -e
+$
+==========================================================================================

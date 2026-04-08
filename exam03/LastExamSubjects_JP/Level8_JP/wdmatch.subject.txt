@@ -1,0 +1,27 @@
+Assignment name  : wdmatch
+Expected files   : wdmatch.c
+Allowed functions: write
+--------------------------------------------------------------------------------
+
+2 つの文字列を引数に取り、2 つ目の文字列に出現する文字の順序を保ったまま、
+その文字を使って 1 つ目の文字列を作れるかどうかを判定するプログラムを
+作成してください。
+
+作れる場合は、プログラムはその文字列を表示し、末尾に \n を付けます。
+作れない場合は、\n のみを表示します。
+
+引数の数が 2 でない場合、プログラムは \n を表示します。
+
+Examples:
+
+$>./wdmatch "faya" "fgvvfdxcacpolhyghbreda" | cat -e
+faya$
+$>./wdmatch "faya" "fgvvfdxcacpolhyghbred" | cat -e
+$
+$>./wdmatch "quarante deux" "qfqfsudf arzgsayns tsregfdgs sjytdekuoixq " | cat -e
+quarante deux$
+$>./wdmatch "error" rrerrrfiiljdfxjyuifrrvcoojh | cat -e
+$
+$>./wdmatch | cat -e
+$
+==========================================================================================

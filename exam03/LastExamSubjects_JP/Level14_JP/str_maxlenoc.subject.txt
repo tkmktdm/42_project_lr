@@ -1,0 +1,24 @@
+Assignment name  : str_maxlenoc
+Expected files   : str_maxlenoc.c
+Allowed functions: write, malloc, free
+--------------------------------------------------------------------------------
+
+1 つ以上の文字列を引数として取り、すべての引数に出現する最も長い文字列を
+改行付きで表示するプログラムを作成してください。条件を満たす文字列が複数ある
+場合は、最初の引数の中で最初に出現するものを表示します。なお、空文字列は
+技術的にはあらゆる文字列に出現する点に注意してください。
+
+引数がない場合、プログラムは \n を表示します。
+
+例:
+
+$>./str_maxlenoc ab bac abacabccabcb
+a
+$>./str_maxlenoc bonjour salut bonjour bonjour
+u
+$>./str_maxlenoc xoxAoxo xoxAox  oxAox oxo  A ooxAoxx oxooxo Axo | cat -e
+$
+$>./str_maxlenoc bosdsdfnjodur atehhellosd afkuonjosurafg headfgllosf fghellosag afdfbosnjourafg
+os
+$>./str_maxlenoc | cat -e
+$

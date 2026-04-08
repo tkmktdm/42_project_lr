@@ -1,0 +1,42 @@
+Assignment name  : sort_list
+Expected files   : sort_list.c
+Allowed functions:
+--------------------------------------------------------------------------------
+
+以下の関数を作成してください。
+
+t_list  *sort_list(t_list* lst, int (*cmp)(int, int));
+
+この関数は、引数として渡された連結リストを、関数ポインタ cmp を使って
+適用する順序を選択しながらソートし、ソート済みリストの先頭要素への
+ポインタを返さなければなりません。
+
+重複は残さなければなりません。
+
+入力は常に整合性が取れています。
+
+提供される list.h ファイルに記述された型 t_list を使用しなければなりません。
+そのファイルを include する必要がありますが(#include "list.h")、
+提出してはいけません。採点時には我々の側で用意したものを使ってあなたの
+課題をコンパイルします。
+
+cmp として渡される関数は、a と b が正しい順序にある場合は 0 以外の値を、
+そうでない場合は 0 を返します。
+
+例えば、cmp として以下の関数を使用すると、リストは昇順にソートされます。
+
+int ascending(int a, int b)
+{
+    return (a <= b);
+}
+
+list.h
+======
+typedef struct s_list t_list;
+
+struct s_list
+{
+	int     data;
+	t_list  *next;
+};
+

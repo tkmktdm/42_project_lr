@@ -1,0 +1,9 @@
+Assignment name  : print_even
+Expected files   : print_even.c
+Allowed functions: write
+--------------------------------------------------------------------------------
+インデックスが 2 の倍数の場合にのみ文字を出力するプログラムを作成してください。
+
+./a.out "FOR 42" | cat -e
+FR4$
+

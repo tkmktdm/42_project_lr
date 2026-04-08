@@ -1,0 +1,20 @@
+Assignment name  : is_palindrome
+Expected files   : is_palindrome.c
+Allowed functions: write
+--------------------------------------------------------------------------------
+
+文字列を引数として取り、その文字列が回文であればその文字列を表示し、
+末尾に改行を付けるプログラムを作成してください。
+
+文字列が回文でない場合は改行のみを表示します。
+
+引数の数が 1 でない(1 より多い、または少ない)場合、プログラムは改行のみを
+表示しなければなりません。
+
+Examples:
+
+$> ./is_palindrome "aaabb" | cat -e
+$> $
+$> ./is_palindrome "zaz" | cat -e
+$> zaz$
+

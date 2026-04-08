@@ -1,0 +1,25 @@
+Assignment name  : count_alpha
+Expected files   : count_alpha.c
+Allowed functions: write, printf
+--------------------------------------------------------------------------------
+
+count_alpha という名前のプログラムを作成してください。このプログラムは文字列を
+引数として取り、その中のアルファベット文字の出現回数を表示します。それ以外の文字は
+カウントしません。順序は文字列内での出現順です。表示の最後は改行で終わらせなければ
+なりません。
+
+フォーマットは例の通りです。
+
+引数の数が 1 でない場合は、改行のみを表示してください。
+
+例:
+$> ./count_alpha abbcc
+1a, 2b, 2c
+$> ./count_alpha "abbcc"
+1a, 2b, 2c
+$> ./count_alpha "abbcc" "dddeef" | cat -e
+$
+$> ./count_alpha "My Hyze 47y 7." | cat -e
+1m, 3y, 1h, 1z, 1e$
+$> ./count_alpha "" | cat -e
+$

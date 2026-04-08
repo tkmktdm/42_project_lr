@@ -1,0 +1,27 @@
+Assignment name  : union
+Expected files   : union.c
+Allowed functions: write
+--------------------------------------------------------------------------------
+
+2 つの文字列を引数に取り、いずれかの文字列に出現する文字を、重複なく
+表示するプログラムを作成してください。
+
+表示はコマンドラインに文字が出現する順序で行い、末尾に \n を付けます。
+
+引数の数が 2 でない場合、プログラムは \n を表示します。
+
+Example:
+
+$>./union zpadinton "paqefwtdjetyiytjneytjoeyjnejeyj" | cat -e
+zpadintoqefwjy$
+$>./union ddf6vewg64f gtwthgdwthdwfteewhrtag6h4ffdhsd | cat -e
+df6vewg4thras$
+$>./union "rien" "cette phrase ne cache rien" | cat -e
+rienct phas$
+$>./union | cat -e
+$
+$>
+$>./union "rien" | cat -e
+$
+$>
+==========================================================================================

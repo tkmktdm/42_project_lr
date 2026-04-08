@@ -1,0 +1,23 @@
+Assignment name  : ft_list_remove_if
+Expected files   : ft_list_remove_if.c
+Allowed functions: free
+--------------------------------------------------------------------------------
+
+ft_list_remove_if という関数を作成してください。この関数は、渡されたリストから、
+データが参照データと「等しい」要素をすべて削除します。
+
+以下のように宣言してください。
+
+void ft_list_remove_if(t_list **begin_list, void *data_ref, int (*cmp)());
+
+cmp は 2 つの void* を引数として取り、両方の引数が等しい場合に 0 を返します。
+
+ft_list.h ファイルを使用する必要があります。このファイルには以下が含まれます。
+
+$>cat ft_list.h
+typedef struct      s_list
+{
+    struct s_list   *next;
+    void            *data;
+}                   t_list;
+$>

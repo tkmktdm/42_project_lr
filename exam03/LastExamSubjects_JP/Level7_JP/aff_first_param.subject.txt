@@ -1,0 +1,19 @@
+Assignment name  : aff_first_param
+Expected files   : aff_first_param.c
+Allowed functions: write
+--------------------------------------------------------------------------------
+
+文字列を引数として取り、その最初の引数を表示し、最後に \n を出力する
+プログラムを作成してください。
+
+引数の数が 1 未満の場合は、プログラムは \n を表示します。
+
+例:
+
+$> ./aff_first_param vincent mit "l'ane" dans un pre et "s'en" vint | cat -e
+vincent$
+$> ./aff_first_param "j'aime le fromage de chevre" | cat -e
+j'aime le fromage de chevre$
+$> ./aff_first_param
+$
+==========================================================================================

@@ -1,0 +1,19 @@
+Assignment name  : aff_last_param
+Expected files   : aff_last_param.c
+Allowed functions: write
+--------------------------------------------------------------------------------
+
+文字列を引数として取り、その最後の引数を表示し、最後に改行を出力する
+プログラムを作成してください。
+
+引数の数が 1 未満の場合は、プログラムは改行を表示します。
+
+例:
+
+$> ./aff_last_param "zaz" "mange" "des" "chats" | cat -e
+chats$
+$> ./aff_last_param "j'aime le savon" | cat -e
+j'aime le savon$
+$> ./aff_last_param
+$
+==========================================================================================
