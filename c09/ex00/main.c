@@ -3,32 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hibitakumi <hibitakumi@student.42.fr>      +#+  +:+       +#+        */
+/*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/04/07 08:55:17 by hibitakumi        #+#    #+#             */
-/*   Updated: 2026/04/07 09:04:11 by hibitakumi       ###   ########.fr       */
+/*   Created: 2026/04/07 21:16:08 by htakumi           #+#    #+#             */
+/*   Updated: 2026/04/07 21:18:25 by htakumi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_boolean.h"
+void	ft_putchar(char *c);
 
-void ft_putstr(char *str)
+int	main(void)
 {
-    while (*str)
-        write(1, str++, 1);
-}
-
-t_bool ft_is_even(int nbr)
-{
-    return ((EVEN(nbr)) ? TRUE : FALSE);
-}
-
-int main(int argc, char **argv)
-{
-    (void)argv;
-    if (ft_is_even(argc - 1) == TRUE)
-        ft_putstr(EVEN_MSG);
-    else
-        ft_putstr(ODD_MSG);
-    return (SUCCESS);
+	ft_putchar("a");
+	return (0);
 }

@@ -1,27 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_boolean.h                                       :+:      :+:    :+:   */
+/*   ft_strcmp.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/04/07 08:54:40 by hibitakumi        #+#    #+#             */
-/*   Updated: 2026/04/07 20:31:40 by htakumi          ###   ########.fr       */
+/*   Created: 2026/04/07 21:10:02 by htakumi           #+#    #+#             */
+/*   Updated: 2026/04/07 21:12:55 by htakumi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_BOOLEAN_H
-# define FT_BOOLEAN_H
-
-# include <unistd.h>
-
-# define TRUE 1
-# define FALSE 0
-# define EVEN(nbr) ((nbr) % 2 == 0)
-# define EVEN_MSG "I have an even number of arguments.\n"
-# define ODD_MSG "I have an odd number of arguments.\n"
-# define SUCCESS 0
-
-typedef int	t_bool;
-
-#endif
+int	ft_strcmp(char *s1, char *s2)
+{
+	while (*s1 || *s2)
+	{
+		if (*s1 > *s2)
+		{
+			return (*s1 - *s2);
+		}
+		else if (*s2 > *s1)
+		{
+			return (*s1 - *s2);
+		}
+		s1++;
+		s2++;
+	}
+	return (0);
+}
