@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>rush02 visualizer</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Courier New', monospace;
+      background: #0d1117;
+      color: #c9d1d9;
+      padding: 24px;
+      min-height: 100vh;
+    }
+    h1 { color: #58a6ff; font-size: 1.4rem; margin-bottom: 6px; }
+    .subtitle { color: #8b949e; font-size: 0.85rem; margin-bottom: 24px; }
+
+    .input-area {
+      display: flex; gap: 10px; margin-bottom: 32px; align-items: center;
+    }
+    input[type="text"] {
+      background: #161b22; border: 1px solid #30363d; color: #c9d1d9;
+      padding: 10px 14px; font-family: inherit; font-size: 1rem;
+      border-radius: 6px; width: 260px; outline: none;
+    }
+    input[type="text"]:focus { border-color: #58a6ff; }
+    button {
+      background: #238636; color: #fff; border: none;
+      padding: 10px 20px; font-family: inherit; font-size: 0.95rem;
+      border-radius: 6px; cursor: pointer;
+    }
+    button:hover { background: #2ea043; }
+
+    .error { color: #f85149; margin-bottom: 16px; font-size: 0.9rem; }
+
+    /* ---- STEP SECTIONS ---- */
+    .step {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 8px;
+      padding: 18px 22px;
+      margin-bottom: 18px;
+    }
+    .step-title {
+      color: #58a6ff; font-size: 0.8rem; text-transform: uppercase;
+      letter-spacing: 0.08em; margin-bottom: 14px;
+    }
+    .step-title span {
+      background: #1f6feb33; border: 1px solid #1f6feb;
+      border-radius: 4px; padding: 2px 8px; margin-right: 8px;
+    }
+
+    /* ---- INPUT display ---- */
+    .num-chars {
+      display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 8px;
+    }
+    .char-box {
+      background: #21262d; border: 1px solid #30363d;
+      border-radius: 4px; width: 36px; height: 36px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem; color: #e6edf3;
+      transition: background 0.2s;
+    }
+    .char-box.highlight { background: #1f6feb55; border-color: #58a6ff; color: #58a6ff; }
+
+    /* ---- GROUPS ---- */
+    .groups-row {
+      display: flex; gap: 12px; flex-wrap: wrap;
+    }
+    .group-card {
+      border: 1px solid #30363d; border-radius: 6px;
+      padding: 10px 14px; min-width: 110px;
+      position: relative;
+    }
+    .group-card.top { border-color: #f0883e; }
+    .group-label {
+      font-size: 0.7rem; color: #8b949e; margin-bottom: 6px;
+    }
+    .group-digits {
+      display: flex; gap: 3px;
+    }
+    .digit-box {
+      background: #21262d; border: 1px solid #30363d;
+      border-radius: 3px; width: 28px; height: 28px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+    }
+    .digit-box.zero { color: #484f58; }
+    .digit-box.nonzero { color: #79c0ff; }
+    .group-unit {
+      font-size: 0.72rem; color: #f0883e; margin-top: 6px;
+    }
+    .top-badge {
+      position: absolute; top: -8px; right: 8px;
+      background: #f0883e; color: #0d1117;
+      font-size: 0.65rem; padding: 1px 6px; border-radius: 3px;
+    }
+
+    /* ---- PARSE per group ---- */
+    .parse-block {
+      border: 1px solid #30363d; border-radius: 6px;
+      padding: 12px 16px; margin-bottom: 12px;
+    }
+    .parse-title { color: #e6edf3; font-size: 0.85rem; margin-bottom: 10px; }
+    .parse-row {
+      display: flex; align-items: center; gap: 8px;
+      margin-bottom: 6px; font-size: 0.88rem;
+    }
+    .parse-key {
+      background: #21262d; border: 1px solid #30363d;
+      border-radius: 3px; padding: 2px 8px; color: #79c0ff; min-width: 52px; text-align: center;
+    }
+    .arrow { color: #484f58; }
+    .parse-val { color: #7ee787; }
+    .parse-val.miss { color: #f85149; }
+
+    /* ---- FINAL OUTPUT ---- */
+    .output-box {
+      background: #0d1117; border: 1px solid #238636;
+      border-radius: 6px; padding: 14px 18px;
+      font-size: 1.05rem; color: #7ee787; word-break: break-all;
+      line-height: 1.7;
+    }
+    .output-token {
+      display: inline-block;
+      padding: 2px 6px; margin: 2px;
+      border-radius: 4px;
+    }
+    .tok-num  { background: #1f6feb33; color: #79c0ff; }
+    .tok-unit { background: #f0883e22; color: #f0883e; }
+
+    /* ---- DICT preview ---- */
+    .dict-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 6px;
+    }
+    .dict-row {
+      background: #21262d; border-radius: 4px;
+      padding: 4px 10px; font-size: 0.82rem;
+      display: flex; justify-content: space-between;
+    }
+    .dict-row.used { background: #1f6feb33; border: 1px solid #1f6feb55; }
+    .dict-key { color: #79c0ff; }
+    .dict-val { color: #7ee787; }
+  </style>
+</head>
+<body>
+
+<h1>rush02/ex00 — Number to English Visualizer</h1>
+<p class="subtitle">数値 → 英語変換の内部処理をステップごとに可視化します</p>
+
+<div class="input-area">
+  <input type="text" id="numInput" placeholder="数値を入力 (例: 1234567)" value="1234567" maxlength="30"/>
+  <button onclick="run()">変換 &amp; 可視化</button>
+</div>
+<div id="errorMsg" class="error" style="display:none"></div>
+<div id="output"></div>
+
+<script>
+// ---------- dict (numbers.dict の内容) ----------
+const DICT = {
+  "0":"zero","1":"one","2":"two","3":"three","4":"four",
+  "5":"five","6":"six","7":"seven","8":"eight","9":"nine",
+  "10":"ten","11":"eleven","12":"twelve","13":"thirteen","14":"fourteen",
+  "15":"fifteen","16":"sixteen","17":"seventeen","18":"eighteen","19":"nineteen",
+  "20":"twenty","30":"thirty","40":"forty","50":"fifty",
+  "60":"sixty","70":"seventy","80":"eighty","90":"ninety",
+  "100":"hundred",
+  "1000":"thousand",
+  "1000000":"million",
+  "1000000000":"billion",
+  "1000000000000":"trillion",
+  "1000000000000000":"quadrillion",
+  "1000000000000000000":"quintillion",
+  "1000000000000000000000":"sextillion",
+  "1000000000000000000000000":"septillion",
+  "1000000000000000000000000000":"octillion",
+  "1000000000000000000000000000000":"nonillion",
+  "1000000000000000000000000000000000":"decillion",
+  "1000000000000000000000000000000000000":"undecillion"
+};
+
+function unitKey(idx) {
+  if (idx === 0) return null;
+  return "1" + "0".repeat(idx * 3);
+}
+
+// ---------- split_groups ----------
+function splitGroups(numStr) {
+  const groups = [];
+  let i = numStr.length;
+  while (i > 0) {
+    const start = Math.max(0, i - 3);
+    groups.push(numStr.slice(start, i));
+    i = start;
+  }
+  return groups; // groups[0] = lowest
+}
+
+// ---------- top_group_idx ----------
+function topGroupIdx(groups) {
+  let i = groups.length - 1;
+  while (i > 0 && groups[i].match(/^0*$/)) i--;
+  return i;
+}
+
+// ---------- convert logic (mirrors C code) ----------
+function convertOnes(g, usedKeys) {
+  if (g === "0") return "";
+  usedKeys.add(g);
+  return DICT[g] || null;
+}
+
+function convertTens(g, usedKeys) {
+  if (g[0] === "1") return convertOnes(g, usedKeys);
+  let parts = [];
+  if (g[0] !== "0") {
+    const k = g[0] + "0";
+    usedKeys.add(k);
+    const w = DICT[k];
+    if (!w) return null;
+    parts.push(w);
+    if (g[1] !== "0") {
+      const w2 = convertOnes(g[1], usedKeys);
+      if (w2 === null) return null;
+      if (w2) parts.push(w2);
+    }
+  } else {
+    const w = convertOnes(g[1], usedKeys);
+    if (w === null) return null;
+    if (w) parts.push(w);
+  }
+  return parts.join(" ");
+}
+
+function convertHundreds(group, usedKeys) {
+  const len = group.length;
+  const parts = [];
+  if (len === 3 && group[0] !== "0") {
+    usedKeys.add(group[0]);
+    usedKeys.add("100");
+    const w = DICT[group[0]];
+    const h = DICT["100"];
+    if (!w || !h) return null;
+    parts.push(w + " " + h);
+  }
+  if (len >= 2) {
+    const sub = group.slice(len - 2);
+    const w = convertTens(sub, usedKeys);
+    if (w === null) return null;
+    if (w) parts.push(w);
+  } else if (group[0] !== "0") {
+    const w = convertOnes(group, usedKeys);
+    if (w === null) return null;
+    if (w) parts.push(w);
+  }
+  return parts.join(" ");
+}
+
+function convertAll(numStr) {
+  const usedKeys = new Set();
+  if (numStr.match(/^0+$/)) {
+    usedKeys.add("0");
+    return { result: "zero", usedKeys, groups: ["0"], top: 0 };
+  }
+  const groups = splitGroups(numStr);
+  const top = topGroupIdx(groups);
+  const tokens = [];
+
+  for (let i = top; i >= 0; i--) {
+    const g = groups[i];
+    if (g.match(/^0*$/)) continue;
+    const word = convertHundreds(g, usedKeys);
+    if (word === null) return { error: "dict lookup failed" };
+    tokens.push({ word, isUnit: false });
+    const uk = unitKey(i);
+    if (uk) {
+      usedKeys.add(uk);
+      const u = DICT[uk];
+      if (!u) return { error: `no unit for index ${i}` };
+      tokens.push({ word: u, isUnit: true });
+    }
+  }
+  return { result: tokens.map(t => t.word).join(" "), tokens, usedKeys, groups, top };
+}
+
+// ---------- rendering ----------
+function run() {
+  const raw = document.getElementById("numInput").value.trim();
+  const errEl = document.getElementById("errorMsg");
+  const out = document.getElementById("output");
+
+  if (!/^\d+$/.test(raw)) {
+    errEl.textContent = "数字のみ入力してください";
+    errEl.style.display = "block";
+    out.innerHTML = "";
+    return;
+  }
+  errEl.style.display = "none";
+
+  const res = convertAll(raw);
+  if (res.error) {
+    errEl.textContent = "変換エラー: " + res.error;
+    errEl.style.display = "block";
+    out.innerHTML = "";
+    return;
+  }
+
+  out.innerHTML = [
+    renderStep1(raw),
+    renderStep2(res.groups, res.top),
+    renderStep3(res.groups, res.top, res.usedKeys),
+    renderStep4(res.tokens, res.result),
+    renderDict(res.usedKeys),
+  ].join("");
+}
+
+function renderStep1(numStr) {
+  const chars = numStr.split("").map((c, i) =>
+    `<div class="char-box">${c}</div>`
+  ).join("");
+  return `
+  <div class="step">
+    <div class="step-title"><span>STEP 1</span>入力文字列</div>
+    <div class="num-chars">${chars}</div>
+    <div style="color:#8b949e;font-size:0.8rem;margin-top:8px">
+      長さ: ${numStr.length} 文字 → ${Math.ceil(numStr.length / 3)} グループに分割予定
+    </div>
+  </div>`;
+}
+
+function renderStep2(groups, top) {
+  const unitNames = ["(ones)","thousand","million","billion","trillion","quadrillion","quintillion","sextillion","septillion","octillion","nonillion","decillion","undecillion"];
+  const cards = groups.map((g, i) => {
+    const isTop = (i === top);
+    const isZero = g.match(/^0*$/);
+    const digits = g.split("").map(d =>
+      `<div class="digit-box ${d==="0"?"zero":"nonzero"}">${d}</div>`
+    ).join("");
+    const unit = unitNames[i] || `10^${i*3}`;
+    return `
+    <div class="group-card ${isTop?"top":""}">
+      ${isTop ? '<div class="top-badge">TOP</div>' : ""}
+      <div class="group-label">groups[${i}] = "${g}"</div>
+      <div class="group-digits">${digits}</div>
+      <div class="group-unit">${unit}</div>
+    </div>`;
+  }).reverse().join("");
+
+  return `
+  <div class="step">
+    <div class="step-title"><span>STEP 2</span>split_groups() → 3桁ごとのグループ化</div>
+    <div style="color:#8b949e;font-size:0.8rem;margin-bottom:12px">
+      ※ 後ろから3桁ずつ分割。groups[0]が最下位（ones）、インデックスが大きいほど上位桁
+    </div>
+    <div class="groups-row">${cards}</div>
+  </div>`;
+}
+
+function renderStep3(groups, top, usedKeys) {
+  const unitNames = ["","thousand","million","billion","trillion","quadrillion","quintillion","sextillion","septillion","octillion","nonillion","decillion","undecillion"];
+  const blocks = [];
+  for (let i = top; i >= 0; i--) {
+    const g = groups[i];
+    if (g.match(/^0*$/)) continue;
+    const len = g.length;
+    const rows = [];
+    const tempKeys = new Set();
+    convertHundreds(g, tempKeys);
+    const unitK = unitKey(i);
+    if (unitK) tempKeys.add(unitK);
+
+    tempKeys.forEach(k => {
+      const val = DICT[k];
+      rows.push(`
+        <div class="parse-row">
+          <div class="parse-key">${k}</div>
+          <span class="arrow">→</span>
+          <div class="parse-val ${val?"":"miss"}">${val || "NOT FOUND"}</div>
+        </div>`);
+    });
+
+    const unit = unitNames[i] || `10^${i*3}`;
+    blocks.push(`
+      <div class="parse-block">
+        <div class="parse-title">groups[${i}] = "${g}" ${unit ? `<span style="color:#f0883e">(${unit}の位)</span>` : ""}</div>
+        ${rows.join("")}
+      </div>`);
+  }
+
+  return `
+  <div class="step">
+    <div class="step-title"><span>STEP 3</span>dict_lookup() — 各グループのキー検索</div>
+    ${blocks.join("")}
+  </div>`;
+}
+
+function renderStep4(tokens, result) {
+  if (!tokens) {
+    return `
+    <div class="step">
+      <div class="step-title"><span>STEP 4</span>最終出力</div>
+      <div class="output-box">${result}</div>
+    </div>`;
+  }
+  const tokenHtml = tokens.map(t =>
+    `<span class="output-token ${t.isUnit?"tok-unit":"tok-num"}">${t.word}</span>`
+  ).join('<span style="color:#484f58"> + </span>');
+
+  return `
+  <div class="step">
+    <div class="step-title"><span>STEP 4</span>最終出力 — トークン結合</div>
+    <div style="margin-bottom:12px;line-height:2">${tokenHtml}</div>
+    <div class="output-box">${result}</div>
+    <div style="color:#8b949e;font-size:0.78rem;margin-top:8px">
+      <span style="color:#79c0ff">■</span> 数値ワード &nbsp;
+      <span style="color:#f0883e">■</span> 単位ワード (thousand / million ...)
+    </div>
+  </div>`;
+}
+
+function renderDict(usedKeys) {
+  const allKeys = Object.keys(DICT);
+  const rows = allKeys.map(k => {
+    const used = usedKeys.has(k);
+    return `<div class="dict-row ${used?"used":""}">
+      <span class="dict-key">${k}</span>
+      <span class="dict-val">${DICT[k]}</span>
+    </div>`;
+  }).join("");
+  return `
+  <div class="step">
+    <div class="step-title"><span>DICT</span>numbers.dict — 今回使用したキーをハイライト</div>
+    <div class="dict-grid">${rows}</div>
+  </div>`;
+}
+
+// 初期実行
+run();
+</script>
+</body>
+</html>
