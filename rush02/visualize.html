@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>rush02 — 数字→英語変換 ビジュアライズ</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Courier New', monospace; background: #1e1e2e; color: #cdd6f4; padding: 32px; line-height: 1.6; }
+  h1 { color: #89b4fa; font-size: 1.4em; margin-bottom: 8px; }
+  h2 { color: #89dceb; font-size: 1.1em; margin: 32px 0 12px; border-left: 3px solid #89dceb; padding-left: 10px; }
+  h3 { color: #a6e3a1; font-size: 0.95em; margin: 20px 0 8px; }
+  .subtitle { color: #6c7086; margin-bottom: 32px; font-size: 0.9em; }
+
+  /* ── カード ── */
+  .card { background: #313244; border-radius: 8px; padding: 20px; margin-bottom: 20px; }
+
+  /* ── フロー図 ── */
+  .flow { display: flex; align-items: center; flex-wrap: wrap; gap: 0; }
+  .node {
+    background: #45475a; border-radius: 6px; padding: 8px 14px;
+    font-size: 0.85em; text-align: center; white-space: nowrap;
+  }
+  .node.input  { background: #313244; border: 1px solid #89b4fa; color: #89b4fa; }
+  .node.func   { background: #313244; border: 1px solid #a6e3a1; color: #a6e3a1; }
+  .node.data   { background: #313244; border: 1px solid #f9e2af; color: #f9e2af; }
+  .node.output { background: #313244; border: 1px solid #cba6f7; color: #cba6f7; }
+  .node.error  { background: #313244; border: 1px solid #f38ba8; color: #f38ba8; }
+  .arrow { color: #6c7086; padding: 0 6px; font-size: 1.1em; }
+  .arrow.down { display: block; text-align: center; color: #6c7086; margin: 4px 0; }
+
+  /* ── split_groups ビジュアル ── */
+  .numstr {
+    display: flex; gap: 0; margin-bottom: 16px;
+  }
+  .digit {
+    width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
+    border: 1px solid #6c7086; font-size: 1.1em; font-weight: bold;
+  }
+  .digit.g0 { background: #313244; border-color: #f38ba8; color: #f38ba8; }
+  .digit.g1 { background: #313244; border-color: #a6e3a1; color: #a6e3a1; }
+  .digit.g2 { background: #313244; border-color: #89b4fa; color: #89b4fa; }
+  .digit.g3 { background: #313244; border-color: #cba6f7; color: #cba6f7; }
+
+  .groups-row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 12px; }
+  .group-box {
+    border: 1px solid #6c7086; border-radius: 6px; padding: 10px 14px;
+    min-width: 120px;
+  }
+  .group-box.g0 { border-color: #f38ba8; }
+  .group-box.g1 { border-color: #a6e3a1; }
+  .group-box.g2 { border-color: #89b4fa; }
+  .group-box.g3 { border-color: #cba6f7; }
+  .group-label { font-size: 0.75em; color: #6c7086; margin-bottom: 4px; }
+  .group-value { font-size: 1.2em; font-weight: bold; }
+  .group-value.g0 { color: #f38ba8; }
+  .group-value.g1 { color: #a6e3a1; }
+  .group-value.g2 { color: #89b4fa; }
+  .group-value.g3 { color: #cba6f7; }
+  .group-unit { font-size: 0.8em; color: #9399b2; margin-top: 4px; }
+
+  /* ── 変換ステップ ── */
+  .convert-step {
+    border-left: 2px solid #45475a; padding-left: 16px; margin: 12px 0;
+  }
+  .step-header { font-size: 0.85em; color: #9399b2; margin-bottom: 6px; }
+  .step-output { background: #1e1e2e; border-radius: 4px; padding: 8px 12px; font-size: 0.9em; }
+  .word { color: #f9e2af; }
+  .unit-word { color: #cba6f7; }
+  .space-char { color: #45475a; }
+
+  /* ── メモリレイアウト ── */
+  .mem-table { width: 100%; border-collapse: collapse; font-size: 0.82em; }
+  .mem-table th { background: #45475a; padding: 6px 10px; text-align: left; color: #9399b2; font-weight: normal; }
+  .mem-table td { padding: 6px 10px; border-bottom: 1px solid #313244; }
+  .mem-table tr:hover td { background: #313244; }
+  .addr { color: #6c7086; font-size: 0.8em; }
+  .val  { color: #f9e2af; }
+  .ptr  { color: #89b4fa; }
+
+  /* ── コールグラフ ── */
+  .callgraph { font-size: 0.85em; }
+  .call-line { padding: 3px 0; }
+  .indent1 { padding-left: 20px; }
+  .indent2 { padding-left: 40px; }
+  .indent3 { padding-left: 60px; }
+  .indent4 { padding-left: 80px; }
+  .fn { color: #a6e3a1; }
+  .fn-sub { color: #89dceb; }
+  .fn-out { color: #cba6f7; }
+  .fn-dict { color: #f9e2af; }
+  .comment { color: #6c7086; }
+
+  /* ── idx↔単位対応 ── */
+  .idx-table { display: flex; flex-direction: column; gap: 8px; }
+  .idx-row { display: flex; align-items: center; gap: 12px; }
+  .idx-badge {
+    width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center;
+    justify-content: center; font-size: 0.85em; font-weight: bold; flex-shrink: 0;
+  }
+  .idx-badge.i0 { background: #f38ba8; color: #1e1e2e; }
+  .idx-badge.i1 { background: #a6e3a1; color: #1e1e2e; }
+  .idx-badge.i2 { background: #89b4fa; color: #1e1e2e; }
+  .idx-badge.i3 { background: #cba6f7; color: #1e1e2e; }
+  .idx-key { color: #f9e2af; min-width: 120px; font-size: 0.85em; }
+  .idx-val { color: #cdd6f4; font-size: 0.85em; }
+
+  /* ── interactive ── */
+  .demo-input {
+    background: #1e1e2e; border: 1px solid #89b4fa; color: #cdd6f4;
+    font-family: 'Courier New', monospace; font-size: 1em; padding: 8px 12px;
+    border-radius: 4px; width: 200px;
+  }
+  .demo-btn {
+    background: #89b4fa; color: #1e1e2e; border: none; padding: 8px 16px;
+    border-radius: 4px; font-family: 'Courier New', monospace; cursor: pointer;
+    font-size: 0.9em; margin-left: 8px;
+  }
+  .demo-btn:hover { background: #74c7ec; }
+  #demo-result { margin-top: 16px; }
+  .demo-groups { display: flex; gap: 12px; flex-wrap: wrap; margin: 12px 0; }
+  .demo-group {
+    border: 1px solid #6c7086; border-radius: 4px; padding: 8px 12px;
+    font-size: 0.9em; text-align: center; min-width: 80px;
+  }
+
+  /* ── section spacing ── */
+  section { margin-bottom: 40px; }
+  .tag { font-size: 0.7em; background: #45475a; padding: 2px 6px; border-radius: 3px; color: #9399b2; margin-left: 6px; }
+</style>
+</head>
+<body>
+
+<h1>rush02 — 数字 → 英語変換 ビジュアライズ</h1>
+<p class="subtitle">./a.out [辞書ファイル] &lt;数字&gt; → 英語の読み方</p>
+
+<!-- ══════════════════════════════════════════
+     1. 全体フロー
+══════════════════════════════════════════ -->
+<section>
+<h2>1. 全体処理フロー</h2>
+<div class="card">
+  <div class="flow" style="flex-direction:column; align-items:flex-start; gap:4px;">
+    <div class="flow">
+      <div class="node input">./a.out numbers.dict 1234567</div>
+      <div class="arrow">→</div>
+      <div class="node func">main()</div>
+      <div class="arrow">→</div>
+      <div class="node func">run_convert()</div>
+    </div>
+    <div class="arrow down">↓</div>
+    <div class="flow">
+      <div class="node func">load_dict()</div>
+      <div class="arrow">→</div>
+      <div class="node data">t_dict { entries[], lines[] }</div>
+    </div>
+    <div class="arrow down">↓</div>
+    <div class="flow">
+      <div class="node func">convert()</div>
+      <div class="arrow">→</div>
+      <div class="node func">split_groups()</div>
+      <div class="arrow">→</div>
+      <div class="node data">groups[][4]</div>
+    </div>
+    <div class="arrow down">↓</div>
+    <div class="flow">
+      <div class="node func">top_group_idx()</div>
+      <div class="arrow">→</div>
+      <div class="node func">validate_units()</div>
+      <div class="arrow">→</div>
+      <div class="node func">convert_hundreds()</div>
+      <div class="arrow">→</div>
+      <div class="node func">convert_groups()</div>
+    </div>
+    <div class="arrow down">↓</div>
+    <div class="node output" style="font-size:1em; padding:10px 18px;">
+      "one million two hundred thirty four thousand five hundred sixty seven\n"
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     2. split_groups ビジュアル
+══════════════════════════════════════════ -->
+<section>
+<h2>2. split_groups() — 3桁ずつ後ろから切り出す</h2>
+<div class="card">
+  <h3>入力: "1234567"</h3>
+  <div style="margin: 12px 0;">
+    <div style="font-size:0.8em; color:#6c7086; margin-bottom:6px;">インデックス →</div>
+    <div class="numstr">
+      <div class="digit" style="width:52px; height:24px; font-size:0.7em; border:none; color:#6c7086; justify-content:flex-start;">0</div>
+      <div class="digit" style="width:36px; height:24px; font-size:0.7em; border:none; color:#6c7086;">1</div>
+      <div class="digit" style="width:36px; height:24px; font-size:0.7em; border:none; color:#6c7086;">2</div>
+      <div class="digit" style="width:36px; height:24px; font-size:0.7em; border:none; color:#6c7086;">3</div>
+      <div class="digit" style="width:36px; height:24px; font-size:0.7em; border:none; color:#6c7086;">4</div>
+      <div class="digit" style="width:36px; height:24px; font-size:0.7em; border:none; color:#6c7086;">5</div>
+      <div class="digit" style="width:36px; height:24px; font-size:0.7em; border:none; color:#6c7086;">6</div>
+    </div>
+    <div class="numstr">
+      <div class="digit" style="width:52px; color:#6c7086; border:none; font-size:0.8em;">num_str</div>
+      <div class="digit g2">'1'</div>
+      <div class="digit g1">'2'</div>
+      <div class="digit g1">'3'</div>
+      <div class="digit g1">'4'</div>
+      <div class="digit g0">'5'</div>
+      <div class="digit g0">'6'</div>
+      <div class="digit g0">'7'</div>
+    </div>
+    <div style="display:flex; gap:0; margin-top:4px; margin-left:52px;">
+      <div style="width:36px; text-align:center; font-size:0.7em; color:#89b4fa;">↑</div>
+      <div style="width:108px; text-align:center; font-size:0.7em; color:#a6e3a1; border-bottom: 1px dashed #a6e3a1;">start=1, i=4</div>
+      <div style="width:108px; text-align:center; font-size:0.7em; color:#f38ba8; border-bottom: 1px dashed #f38ba8;">start=4, i=7</div>
+    </div>
+    <div style="display:flex; gap:0; margin-left:52px; margin-top:2px;">
+      <div style="width:36px; text-align:center; font-size:0.7em; color:#89b4fa;">g2</div>
+      <div style="width:108px; text-align:center; font-size:0.7em; color:#a6e3a1;">g1</div>
+      <div style="width:108px; text-align:center; font-size:0.7em; color:#f38ba8;">g0</div>
+    </div>
+  </div>
+
+  <div class="arrow down" style="margin: 8px 0; font-size:1.2em;">↓ 後ろから3桁ずつ切り出す</div>
+
+  <div class="groups-row">
+    <div class="group-box g0">
+      <div class="group-label">groups[0]</div>
+      <div class="group-value g0">"567"</div>
+      <div class="group-unit">idx=0 → 単位なし（ones）</div>
+    </div>
+    <div class="group-box g1">
+      <div class="group-label">groups[1]</div>
+      <div class="group-value g1">"234"</div>
+      <div class="group-unit">idx=1 → "thousand"</div>
+    </div>
+    <div class="group-box g2">
+      <div class="group-label">groups[2]</div>
+      <div class="group-value g2">"1"</div>
+      <div class="group-unit">idx=2 → "million"</div>
+    </div>
+  </div>
+
+  <div style="margin-top: 16px; background:#1e1e2e; border-radius:4px; padding:12px; font-size:0.82em;">
+    <div style="color:#9399b2; margin-bottom:8px;">ループの動き (len=7 → i=7,4,1 → 0)</div>
+    <div style="display:grid; grid-template-columns: auto auto auto auto; gap:4px 16px; align-items:center;">
+      <span style="color:#9399b2;">ループ回</span><span style="color:#9399b2;">i（開始）</span><span style="color:#9399b2;">start</span><span style="color:#9399b2;">コピー範囲</span>
+      <span>1回目</span><span>i=7</span><span>start=4</span><span class="val">num_str[4..6] = "567" → groups[0]</span>
+      <span>2回目</span><span>i=4</span><span>start=1</span><span class="val">num_str[1..3] = "234" → groups[1]</span>
+      <span>3回目</span><span>i=1</span><span>start=0</span><span class="val">num_str[0..0] = "1"   → groups[2]</span>
+      <span>終了</span><span>i=0</span><span>—</span><span style="color:#6c7086;">while(i&gt;0) を抜ける</span>
+    </div>
+    <div style="margin-top:8px; color:#9399b2;">戻り値: j=3（グループ数）</div>
+  </div>
+</div>
+
+<!-- エッジケース -->
+<div class="card">
+  <h3>他の入力例</h3>
+  <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:12px; font-size:0.85em;">
+    <div>
+      <div style="color:#9399b2; margin-bottom:6px;">"42"（2桁）</div>
+      <div class="groups-row" style="flex-direction:column; gap:6px;">
+        <div class="group-box g0" style="min-width:0;">
+          <div class="group-label">groups[0]</div>
+          <div class="group-value g0">"42"</div>
+          <div class="group-unit">idx=0 単位なし</div>
+        </div>
+      </div>
+      <div style="color:#9399b2; font-size:0.8em;">j=1</div>
+    </div>
+    <div>
+      <div style="color:#9399b2; margin-bottom:6px;">"1000"（4桁）</div>
+      <div class="groups-row" style="flex-direction:column; gap:6px;">
+        <div class="group-box g0" style="min-width:0;">
+          <div class="group-label">groups[0]</div>
+          <div class="group-value g0">"000"</div>
+          <div class="group-unit">idx=0 単位なし</div>
+        </div>
+        <div class="group-box g1" style="min-width:0;">
+          <div class="group-label">groups[1]</div>
+          <div class="group-value g1">"1"</div>
+          <div class="group-unit">idx=1 → "thousand"</div>
+        </div>
+      </div>
+      <div style="color:#9399b2; font-size:0.8em;">j=2</div>
+    </div>
+    <div>
+      <div style="color:#9399b2; margin-bottom:6px;">"1000000000"（10桁）</div>
+      <div class="groups-row" style="flex-direction:column; gap:6px;">
+        <div class="group-box g0" style="min-width:0;"><div class="group-label">groups[0]</div><div class="group-value g0">"000"</div><div class="group-unit">idx=0</div></div>
+        <div class="group-box g1" style="min-width:0;"><div class="group-label">groups[1]</div><div class="group-value g1">"000"</div><div class="group-unit">idx=1 thousand</div></div>
+        <div class="group-box g2" style="min-width:0;"><div class="group-label">groups[2]</div><div class="group-value g2">"000"</div><div class="group-unit">idx=2 million</div></div>
+        <div class="group-box g3" style="min-width:0;"><div class="group-label">groups[3]</div><div class="group-value g3">"1"</div><div class="group-unit">idx=3 → "billion"</div></div>
+      </div>
+      <div style="color:#9399b2; font-size:0.8em;">j=4</div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     3. idx ↔ 単位 対応表
+══════════════════════════════════════════ -->
+<section>
+<h2>3. idx ↔ 単位キー対応</h2>
+<div class="card">
+  <div style="display:grid; grid-template-columns: 1fr 1fr; gap:24px;">
+    <div>
+      <div class="idx-table">
+        <div class="idx-row">
+          <div class="idx-badge i0">0</div>
+          <div class="idx-key">"1" + "" = 単位なし</div>
+          <div class="idx-val">→ 何も出力しない</div>
+        </div>
+        <div class="idx-row">
+          <div class="idx-badge i1">1</div>
+          <div class="idx-key">"1" + "000" = "1000"</div>
+          <div class="idx-val">→ "thousand"</div>
+        </div>
+        <div class="idx-row">
+          <div class="idx-badge i2">2</div>
+          <div class="idx-key">"1" + "000000" = "1000000"</div>
+          <div class="idx-val">→ "million"</div>
+        </div>
+        <div class="idx-row">
+          <div class="idx-badge i3">3</div>
+          <div class="idx-key">"1" + "000000000"</div>
+          <div class="idx-val">→ "billion"</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div style="font-size:0.82em; color:#9399b2; margin-bottom:8px;">unit_key 生成コード</div>
+      <div style="background:#1e1e2e; border-radius:4px; padding:12px; font-size:0.82em;">
+        <span style="color:#cba6f7;">unit_key</span>[0] = <span style="color:#f9e2af;">'1'</span>;<br>
+        k = 0;<br>
+        <span style="color:#89b4fa;">while</span> (k++ &lt; <span style="color:#cba6f7;">idx</span> * 3)<br>
+        &nbsp;&nbsp;<span style="color:#cba6f7;">unit_key</span>[k] = <span style="color:#f9e2af;">'0'</span>;<br>
+        <br>
+        <span style="color:#6c7086;">// idx=1: "1000"</span><br>
+        <span style="color:#6c7086;">// idx=2: "1000000"</span><br>
+        <span style="color:#6c7086;">// idx*3 個の '0' を追加</span>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     4. convert_hundreds の変換ロジック
+══════════════════════════════════════════ -->
+<section>
+<h2>4. convert_hundreds() — グループ1つを英語に変換</h2>
+<div class="card">
+  <h3>group="347", len=3, unit_idx=1 の場合</h3>
+  <div class="convert-step">
+    <div class="step-header">① len==3 かつ group[0]('3') != '0' → print_hundreds("347")</div>
+    <div class="step-output">
+      dict_lookup("3") → "three" &nbsp;&nbsp; dict_lookup("100") → "hundred"<br>
+      出力: <span class="word">three hundred</span><span class="space-char">·</span>
+    </div>
+  </div>
+  <div class="convert-step">
+    <div class="step-header">② len&gt;=2 → convert_tens(&group[len-2]) = convert_tens("47")</div>
+    <div class="step-output">
+      group[0]='4' != '1' → list="40" → dict_lookup("40") → "forty"<br>
+      group[1]='7' != '0' → convert_ones("7") → "seven"<br>
+      出力: <span class="word">forty</span><span class="space-char">·</span><span class="word">seven</span>
+    </div>
+  </div>
+  <div class="convert-step">
+    <div class="step-header">③ print_unit(dict, 1)</div>
+    <div class="step-output">
+      unit_key = "1000" → dict_lookup("1000") → "thousand"<br>
+      出力: <span class="space-char">·</span><span class="unit-word">thousand</span>
+    </div>
+  </div>
+  <div style="margin-top:12px; background:#1e1e2e; border-radius:4px; padding:12px; font-size:0.9em;">
+    グループ全体の出力: <span class="word">three hundred forty seven</span> <span class="unit-word">thousand</span>
+  </div>
+
+  <h3 style="margin-top:20px;">convert_tens の分岐</h3>
+  <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; font-size:0.82em; margin-top:8px;">
+    <div style="background:#1e1e2e; border-radius:4px; padding:10px;">
+      <div style="color:#9399b2; margin-bottom:6px;">group[0] == '1'（10〜19）</div>
+      <div style="color:#a6e3a1;">→ convert_ones(group)</div>
+      <div style="margin-top:4px; color:#f9e2af;">"15" → dict["15"] → "fifteen"</div>
+      <div style="color:#f9e2af;">"11" → dict["11"] → "eleven"</div>
+    </div>
+    <div style="background:#1e1e2e; border-radius:4px; padding:10px;">
+      <div style="color:#9399b2; margin-bottom:6px;">group[0] != '0' かつ != '1'（20〜99）</div>
+      <div style="color:#a6e3a1;">→ dict[X0] + convert_ones(group[1])</div>
+      <div style="margin-top:4px; color:#f9e2af;">"37" → dict["30"]="thirty" + "seven"</div>
+      <div style="color:#f9e2af;">"50" → dict["50"]="fifty"（ones=0スキップ）</div>
+    </div>
+    <div style="background:#1e1e2e; border-radius:4px; padding:10px;">
+      <div style="color:#9399b2; margin-bottom:6px;">group[0] == '0'（1〜9）</div>
+      <div style="color:#a6e3a1;">→ convert_ones(&group[1])</div>
+      <div style="margin-top:4px; color:#f9e2af;">"07" → dict["7"] → "seven"</div>
+      <div style="color:#f9e2af;">"00" → 0 → 何も出力しない</div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     5. convert の全体ロジック（1234567）
+══════════════════════════════════════════ -->
+<section>
+<h2>5. convert() の処理順序 — "1234567" の場合</h2>
+<div class="card">
+  <div style="font-size:0.85em;">
+
+    <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">
+      <div style="color:#9399b2; width:200px;">split_groups の結果</div>
+      <div style="display:flex; gap:8px;">
+        <div class="group-box g0" style="min-width:0; padding:6px 10px;">
+          <div class="group-label" style="font-size:0.7em;">groups[0]</div>
+          <div class="group-value g0" style="font-size:1em;">"567"</div>
+        </div>
+        <div class="group-box g1" style="min-width:0; padding:6px 10px;">
+          <div class="group-label" style="font-size:0.7em;">groups[1]</div>
+          <div class="group-value g1" style="font-size:1em;">"234"</div>
+        </div>
+        <div class="group-box g2" style="min-width:0; padding:6px 10px;">
+          <div class="group-label" style="font-size:0.7em;">groups[2]</div>
+          <div class="group-value g2" style="font-size:1em;">"1"</div>
+        </div>
+      </div>
+      <div style="color:#9399b2;">top=2（最上位非ゼロ）</div>
+    </div>
+
+    <div style="display:flex; flex-direction:column; gap:8px;">
+      <!-- step 1 -->
+      <div style="display:flex; align-items:flex-start; gap:12px;">
+        <div style="background:#89b4fa; color:#1e1e2e; border-radius:50%; width:22px; height:22px; display:flex; align-items:center; justify-content:center; font-size:0.75em; flex-shrink:0;">1</div>
+        <div style="flex:1;">
+          <div style="color:#9399b2;">convert_hundreds(groups[2]="1", len=1, dict, idx=2)</div>
+          <div style="background:#1e1e2e; border-radius:4px; padding:6px 10px; margin-top:4px;">
+            len=1 → convert_ones("1") → <span class="word">one</span><br>
+            print_unit(dict, 2) → <span class="space-char">·</span><span class="unit-word">million</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- step 2 -->
+      <div style="display:flex; align-items:flex-start; gap:12px;">
+        <div style="background:#a6e3a1; color:#1e1e2e; border-radius:50%; width:22px; height:22px; display:flex; align-items:center; justify-content:center; font-size:0.75em; flex-shrink:0;">2</div>
+        <div style="flex:1;">
+          <div style="color:#9399b2;">convert_groups(groups, i=2, dict) — i=1 から下へ</div>
+          <div style="background:#1e1e2e; border-radius:4px; padding:6px 10px; margin-top:4px;">
+            <span style="color:#9399b2;">i=1: groups[1]="234" (非ゼロ)</span><br>
+            &nbsp;&nbsp;ft_putstr(" ") → <span class="space-char">·</span><br>
+            &nbsp;&nbsp;convert_hundreds("234", 3, dict, 1) → <span class="word">two hundred thirty four</span><span class="space-char">·</span><span class="unit-word">thousand</span><br>
+            <span style="color:#9399b2;">i=0: groups[0]="567" (非ゼロ)</span><br>
+            &nbsp;&nbsp;ft_putstr(" ") → <span class="space-char">·</span><br>
+            &nbsp;&nbsp;convert_hundreds("567", 3, dict, 0) → <span class="word">five hundred sixty seven</span><span style="color:#6c7086;">（単位なし）</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- step 3 -->
+      <div style="display:flex; align-items:flex-start; gap:12px;">
+        <div style="background:#cba6f7; color:#1e1e2e; border-radius:50%; width:22px; height:22px; display:flex; align-items:center; justify-content:center; font-size:0.75em; flex-shrink:0;">3</div>
+        <div style="flex:1;">
+          <div style="color:#9399b2;">ft_putstr("\n")</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:16px; background:#1e1e2e; border-radius:4px; padding:12px; border-left:3px solid #cba6f7;">
+      <span style="color:#9399b2;">最終出力: </span><span class="word">one</span><span class="space-char"> </span><span class="unit-word">million</span><span class="space-char"> </span><span class="word">two hundred thirty four</span><span class="space-char"> </span><span class="unit-word">thousand</span><span class="space-char"> </span><span class="word">five hundred sixty seven</span>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     6. メモリ管理
+══════════════════════════════════════════ -->
+<section>
+<h2>6. メモリ管理の全体像</h2>
+<div class="card">
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; font-size:0.82em;">
+    <div>
+      <div style="color:#9399b2; margin-bottom:8px;">確保・解放の責任分担</div>
+      <table class="mem-table">
+        <tr><th>データ</th><th>確保</th><th>解放</th></tr>
+        <tr><td>dict構造体</td><td class="ptr">load_dict</td><td class="ptr">free_dict</td></tr>
+        <tr><td>dict->lines[i]</td><td class="ptr">ft_split内</td><td class="ptr">free_dict</td></tr>
+        <tr><td>dict->lines</td><td class="ptr">ft_split</td><td class="ptr">free_dict</td></tr>
+        <tr><td>dict->entries</td><td class="ptr">load_dict</td><td class="ptr">free_dict</td></tr>
+        <tr><td>groups[][4]</td><td class="ptr">convert</td><td class="ptr">convert</td></tr>
+        <tr><td>unit_key</td><td class="ptr">unit_exists/<br>print_unit</td><td class="ptr">同関数内</td></tr>
+        <tr><td>word_size</td><td class="ptr">get_word_size</td><td class="ptr">ft_split内</td></tr>
+      </table>
+    </div>
+    <div>
+      <div style="color:#9399b2; margin-bottom:8px;">t_dict の構造</div>
+      <div style="background:#1e1e2e; border-radius:4px; padding:12px;">
+        <div style="color:#9399b2; font-size:0.8em; margin-bottom:8px;">load_dict("numbers.dict") 後</div>
+        <div style="display:flex; flex-direction:column; gap:4px;">
+          <div style="display:flex; gap:8px; align-items:center;">
+            <div style="background:#313244; border:1px solid #89b4fa; border-radius:3px; padding:4px 8px; color:#89b4fa; font-size:0.8em;">dict</div>
+            <div style="color:#6c7086;">→</div>
+            <div style="font-size:0.8em;">{ entries, size, lines }</div>
+          </div>
+          <div style="margin-left:20px; display:flex; gap:8px; align-items:flex-start;">
+            <div style="display:flex; flex-direction:column; gap:2px; color:#9399b2; font-size:0.75em; padding-top:2px;">
+              <div>entries →</div>
+              <div>size →</div>
+              <div>lines →</div>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:2px;">
+              <div style="font-size:0.75em;">[ {key="0", val="zero"}, {key="1", val="one"}, ... ]</div>
+              <div style="font-size:0.75em; color:#f9e2af;">行数（エントリ数）</div>
+              <div style="font-size:0.75em;">[ "0: zero", "1: one", ... , NULL ]</div>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:10px; color:#9399b2; font-size:0.75em;">
+          ⚠ entries[i].key は lines[i] 内のアドレスを指す<br>
+          → lines を解放すると key/value も無効になる
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     7. コールグラフ
+══════════════════════════════════════════ -->
+<section>
+<h2>7. 関数コールグラフ</h2>
+<div class="card callgraph">
+  <div class="call-line"><span class="fn">main()</span></div>
+  <div class="call-line indent1">├─ <span class="fn">is_number()</span></div>
+  <div class="call-line indent1">└─ <span class="fn">run_convert()</span></div>
+  <div class="call-line indent2">├─ <span class="fn-dict">load_dict()</span></div>
+  <div class="call-line indent3">├─ <span class="fn-dict">read_file()</span> <span class="comment">← open/read/close</span></div>
+  <div class="call-line indent3">├─ <span class="fn-dict">ft_split(buf, "\n")</span></div>
+  <div class="call-line indent4">├─ <span class="fn-dict">get_count()</span> <span class="comment">← 行数を数える</span></div>
+  <div class="call-line indent4">├─ <span class="fn-dict">get_word_size()</span></div>
+  <div class="call-line indent4">└─ <span class="fn-dict">fill_words()</span></div>
+  <div class="call-line indent3">└─ <span class="fn-dict">parse_line()</span> × 行数</div>
+  <div class="call-line indent4">└─ <span class="fn-dict">trim()</span> × 2</div>
+  <div class="call-line indent2">├─ <span class="fn">convert()</span></div>
+  <div class="call-line indent3">├─ <span class="fn">is_zero()</span></div>
+  <div class="call-line indent3">├─ <span class="fn">split_groups()</span> <span class="comment">← groups[][4] を作る</span></div>
+  <div class="call-line indent3">├─ <span class="fn">top_group_idx()</span> <span class="comment">← 最上位の非ゼロを探す</span></div>
+  <div class="call-line indent3">├─ <span class="fn-sub">validate_units()</span></div>
+  <div class="call-line indent4">└─ <span class="fn-sub">unit_exists()</span> × グループ数</div>
+  <div class="call-line indent5" style="padding-left:100px;">└─ <span class="fn-dict">dict_lookup()</span></div>
+  <div class="call-line indent3">├─ <span class="fn-sub">convert_hundreds()</span> <span class="comment">← 最上位グループ</span></div>
+  <div class="call-line indent4">├─ <span class="fn-sub">print_hundreds()</span></div>
+  <div class="call-line indent4">├─ <span class="fn-sub">convert_tens()</span></div>
+  <div class="call-line indent5" style="padding-left:100px;">└─ <span class="fn-sub">convert_ones()</span></div>
+  <div class="call-line indent4">└─ <span class="fn-out">print_unit()</span></div>
+  <div class="call-line indent3">└─ <span class="fn">convert_groups()</span> <span class="comment">← 残りのグループ</span></div>
+  <div class="call-line indent4">└─ <span class="fn-sub">convert_hundreds()</span> × (top-1) 回</div>
+  <div class="call-line indent2">└─ <span class="fn-dict">free_dict()</span></div>
+</div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     8. インタラクティブ
+══════════════════════════════════════════ -->
+<section>
+<h2>8. split_groups シミュレーター</h2>
+<div class="card">
+  <div>
+    <input class="demo-input" id="demo-num" type="text" value="1234567" placeholder="数字を入力">
+    <button class="demo-btn" onclick="simulate()">実行</button>
+  </div>
+  <div id="demo-result"></div>
+</div>
+</section>
+
+<script>
+function simulate() {
+  const numStr = document.getElementById('demo-num').value.replace(/^0+/, '') || '0';
+  const colors = ['#f38ba8','#a6e3a1','#89b4fa','#cba6f7','#fab387','#94e2d5'];
+
+  // split_groups ロジック
+  const groups = [];
+  let len = numStr.length;
+  let i = len;
+  while (i > 0) {
+    const start = i >= 3 ? i - 3 : 0;
+    groups.push(numStr.slice(start, i));
+    i = start;
+  }
+
+  const unitNames = ['(単位なし)','thousand','million','billion','trillion','quadrillion'];
+  const top = groups.length - 1;
+
+  let html = '<div style="margin-top:16px;">';
+
+  // 数字の色分け表示
+  html += '<div style="display:flex; margin-bottom:12px; align-items:center;">';
+  html += '<span style="color:#9399b2; font-size:0.8em; margin-right:8px;">入力:</span>';
+  const colored = numStr.split('').reverse().map((ch, idx) => {
+    const gIdx = Math.floor(idx / 3);
+    const c = colors[gIdx % colors.length];
+    return `<span style="color:${c}; font-weight:bold; font-size:1.2em;">${ch}</span>`;
+  }).reverse().join('');
+  html += colored;
+  html += '</div>';
+
+  // グループ表示
+  html += '<div style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:12px;">';
+  groups.forEach((g, idx) => {
+    const c = colors[idx % colors.length];
+    html += `<div style="border:1px solid ${c}; border-radius:6px; padding:8px 12px; text-align:center;">
+      <div style="font-size:0.7em; color:#9399b2;">groups[${idx}]</div>
+      <div style="font-size:1.2em; font-weight:bold; color:${c};">"${g}"</div>
+      <div style="font-size:0.75em; color:#9399b2; margin-top:4px;">${idx < unitNames.length ? unitNames[idx] : 'idx=' + idx}</div>
+    </div>`;
+  });
+  html += '</div>';
+
+  // 出力シミュレート（簡易）
+  html += `<div style="background:#1e1e2e; border-radius:4px; padding:10px; font-size:0.85em;">`;
+  html += `<span style="color:#9399b2;">グループ数: </span><span style="color:#f9e2af;">${groups.length}</span>`;
+  html += `&nbsp;&nbsp;<span style="color:#9399b2;">最上位index: </span><span style="color:#f9e2af;">${top}</span>`;
+  html += `&nbsp;&nbsp;<span style="color:#9399b2;">必要な単位: </span>`;
+  groups.slice(1).forEach((g, i) => {
+    const idx = i + 1;
+    if (!/^0+$/.test(g)) {
+      html += `<span style="color:#cba6f7;">${idx < unitNames.length ? unitNames[idx] : '10^' + (idx*3)} </span>`;
+    }
+  });
+  html += '</div>';
+  html += '</div>';
+
+  document.getElementById('demo-result').innerHTML = html;
+}
+simulate();
+</script>
+
+</body>
+</html>
