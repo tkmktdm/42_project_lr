@@ -1,36 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_map.c                                           :+:      :+:    :+:   */
+/*   ft_foreach.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/04/08 20:38:26 by htakumi           #+#    #+#             */
-/*   Updated: 2026/04/09 20:15:23 by htakumi          ###   ########.fr       */
+/*   Created: 2026/04/08 15:29:56 by htakumi           #+#    #+#             */
+/*   Updated: 2026/04/08 21:53:09 by htakumi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 // #include <stdio.h>
-#include <stdlib.h>
 
-int	*ft_map(int *tab, int length, int (*f)(int))
+void	ft_foreach(int *tab, int length, void (*f)(int))
 {
-	int	i;
-	int	*p;
-	int	*temp;
+	int	*end;
 
-	i = 0;
-	p = malloc(sizeof(int) * (length + 1));
-	if (p == NULL)
-		return (NULL);
-	temp = p;
-	while (i < length)
+	end = tab + length;
+	while (tab < end)
 	{
-		*temp = f(tab[i]);
-		temp++;
-		i++;
+		f(*tab);
+		tab++;
 	}
-	return (p);
 }
 
 // void	_printf(int nbr)
@@ -38,24 +29,14 @@ int	*ft_map(int *tab, int length, int (*f)(int))
 // 	printf("%d\n", nbr);
 // }
 
-// int	_push(int nbr)
-// {
-// 	int	n;
-
-// 	n = 0;
-// 	n = nbr + 42;
-// 	_printf(n);
-// 	return (n);
-// }
-
 // int	main(void)
 // {
 // 	int	tab[4];
 
-// 	tab[0] = 100;
-// 	tab[1] = 200;
-// 	tab[2] = 300;
-// 	tab[3] = 400;
-// 	ft_map(tab, 4, &_push);
+// 	tab[0] = 1;
+// 	tab[1] = 2;
+// 	tab[2] = 3;
+// 	tab[3] = 4;
+// 	ft_foreach(tab, 1337, &_printf);
 // 	return (0);
 // }
