@@ -1,1 +1,1 @@
-# 42tokyo_2026_intro_lr
+# 42_lr
