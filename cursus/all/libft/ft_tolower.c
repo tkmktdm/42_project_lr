@@ -1,23 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_memset.c                                        :+:      :+:    :+:   */
+/*   ft_tolower.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hibitakumi <hibitakumi@student.42.fr>      +#+  +:+       +#+        */
+/*   By: kokubo <kokubo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/04/23 17:38:37 by htakumi           #+#    #+#             */
-/*   Updated: 2026/04/23 23:41:44 by hibitakumi       ###   ########.fr       */
+/*   Created: 2026/04/22 20:15:00 by kokubo            #+#    #+#             */
+/*   Updated: 2026/04/23 01:00:00 by kokubo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
+#include "libft.h"
 
-void ft_memset(void *b, int c, size_t len) {
-    unsigned char *p;
-    p = (unsigned char *) b;
-    while(len > 0) {
-        *p = c;
-        len--;
-        p++;
-    }
+int	ft_tolower(int c)
+{
+	if (c >= 'A' && c <= 'Z')
+		return (c + 32);
+	return (c);
 }

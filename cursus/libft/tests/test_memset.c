@@ -3,15 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   test_memset.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*   By: hibitakumi <hibitakumi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/23 17:38:37 by htakumi           #+#    #+#             */
-/*   Updated: 2026/04/23 17:41:12 by htakumi          ###   ########.fr       */
+/*   Updated: 2026/04/23 23:37:06 by hibitakumi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <string.h>
 
-ft_memset();
+void ft_memset(void *b, int c, size_t len);
 
-void	*ft_memset(void *s, int c, size_t n);
+int main () {
+    int arr[10];
+    memset(arr, 0, sizeof(arr)); // すべての要素を0にする
+    return 0;
+}
