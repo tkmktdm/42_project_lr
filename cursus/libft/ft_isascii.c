@@ -6,9 +6,11 @@
 /*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/23 16:55:54 by htakumi           #+#    #+#             */
-/*   Updated: 2026/04/23 17:13:50 by htakumi          ###   ########.fr       */
+/*   Updated: 2026/04/24 10:33:03 by htakumi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include "libft.h"
 
 int	ft_isascii(int c)
 {

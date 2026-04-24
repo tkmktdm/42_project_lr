@@ -6,11 +6,11 @@
 /*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/23 14:58:02 by htakumi           #+#    #+#             */
-/*   Updated: 2026/04/23 15:23:37 by htakumi          ###   ########.fr       */
+/*   Updated: 2026/04/24 10:32:25 by htakumi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <strings.h>
+#include "libft.h"
 
 void	ft_bzero(void *s, size_t n)
 {

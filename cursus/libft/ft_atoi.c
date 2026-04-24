@@ -6,13 +6,11 @@
 /*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/23 13:37:42 by htakumi           #+#    #+#             */
-/*   Updated: 2026/04/23 13:59:10 by htakumi          ###   ########.fr       */
+/*   Updated: 2026/04/24 10:32:33 by htakumi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-// int	ft_atoi(char *str)
-
-#include <stdlib.h>
+#include "libft.h"
 
 int	ft_atoi(const char *nptr)
 {

@@ -6,11 +6,11 @@
 /*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/23 16:19:45 by htakumi           #+#    #+#             */
-/*   Updated: 2026/04/23 16:55:39 by htakumi          ###   ########.fr       */
+/*   Updated: 2026/04/24 10:33:21 by htakumi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <ctype.h>
+#include "libft.h"
 
 int	ft_isdigit(int c)
 {
