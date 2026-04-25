@@ -1,26 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*   ft_strrchr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/04/23 14:20:02 by htakumi           #+#    #+#             */
-/*   Updated: 2026/04/23 14:35:35 by htakumi          ###   ########.fr       */
+/*   Created: 2026/04/25 10:12:23 by htakumi           #+#    #+#             */
+/*   Updated: 2026/04/25 10:21:11 by htakumi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stddef.h>
+#include "libft.h"
 
-size_t	ft_strlen(const char *s)
+char	*ft_strrchr(const char *s, int c)
 {
-	int	len;
+	const char	*last;
 
-	len = 0;
+	last = NULL;
 	while (*s)
 	{
-		len++;
+		if (*s == (char)c)
+			last = s;
 		s++;
 	}
-	return (len);
+	if ((char)c == '\0')
+		return ((char *)s);
+	return ((char *)last);
 }

@@ -10,6 +10,15 @@ CFLAGS   = -Wall -Wextra -Werror
 # 	$(CC) $(CFLAGS) $^ -o $@ && ./$@
 
 # テスト実行のコマンド作成
+test_strlcpy: test_strlcpy.c $(SRCS_DIR)/ft_strlcpy.c $(SRCS_DIR)/ft_strlen.c
+	$(CC) $(CFLAGS) $^ -o $@
+
+test_strlcat: test_strlcat.c $(SRCS_DIR)/ft_strlcat.c $(SRCS_DIR)/ft_strlen.c
+	$(CC) $(CFLAGS) $^ -o $@
+
+test_strnstr: test_strnstr.c $(SRCS_DIR)/ft_strnstr.c $(SRCS_DIR)/ft_strlen.c
+	$(CC) $(CFLAGS) $^ -o $@
+
 test_%: test_%.c $(SRCS_DIR)/ft_%.c
 	$(CC) $(CFLAGS) $^ -o $@
 

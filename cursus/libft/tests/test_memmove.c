@@ -1,51 +1,63 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   test_memmove.c                                     :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: hibitakumi <hibitakumi@student.42.fr>      +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/04/24 23:50:23 by hibitakumi        #+#    #+#             */
-/*   Updated: 2026/04/25 07:10:16 by hibitakumi       ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-#include <string.h>
-
 #include <stdio.h>
 #include <string.h>
 
-void *ft_memmove(void *dst, const void *src, size_t len);
+void	*ft_memmove(void *dst, const void *src, size_t len);
 
-#define BUF_SIZE 16
-
-int main()
+static void	check(const char *label, int ok)
 {
-    // 変数定義
-    char buf1[BUF_SIZE];
-    char buf2[BUF_SIZE];
+	printf("[%s] %s\n", ok ? "OK" : "NG", label);
+}
 
-    // 変数初期化
-    memset(buf1, '\0', BUF_SIZE);
-    memset(buf2, '\0', BUF_SIZE);
+int	main(void)
+{
+	char	dst[64];
+	char	ref[64];
 
-    // メモリ領域を特定の文字で埋める
-    memset(buf1, 'b', 4);  // buf1の最初の4バイトをaにする
-    memset(buf1, 'a', 2);  // buf1の最初の2バイトをbにする
+	/* 1. 通常コピー（重複なし） */
+	memset(dst, 0, sizeof(dst));
+	memset(ref, 0, sizeof(ref));
+	ft_memmove(dst, "hello", 5);
+	memmove(ref, "hello", 5);
+	check("normal copy", memcmp(dst, ref, 5) == 0);
 
-    // 配列の内容を表示
-    printf("配列の要素を表示(コピー前)。\n");
-    printf("buf1:%s\n", buf1);
-    printf("buf2:%s\n", buf2);
+	/* 2. 戻り値が dst を指す */
+	check("return value", ft_memmove(dst, "hi", 2) == (void *)dst);
 
-    // メモリを上書きする
-    memmove(buf2, buf1, 3);  // buf1の先頭3バイトをbuf2に上書きする
-    memmove(&buf1[2], &buf1[0], 3);  // buf1の先頭3バイトをbuf1の3バイト目に上書きする
+	/* 3. len = 0 → 何もしない */
+	memset(dst, 'A', sizeof(dst));
+	memset(ref, 'A', sizeof(ref));
+	ft_memmove(dst, "hello", 0);
+	memmove(ref, "hello", 0);
+	check("len=0", memcmp(dst, ref, sizeof(dst)) == 0);
 
-    // 配列の内容を表示
-    printf("配列の要素を表示(コピー後)。\n");
-    printf("buf1:%s\n", buf1);
-    printf("buf2:%s\n", buf2);
+	/* 4. dst == src → 何もしない */
+	strcpy(dst, "hello");
+	strcpy(ref, "hello");
+	ft_memmove(dst, dst, 5);
+	memmove(ref, ref, 5);
+	check("dst==src", memcmp(dst, ref, 5) == 0);
 
-    return 0;
+	/* 5. 重複あり：dst が src より後ろ（後ろからコピーが必要） */
+	strcpy(dst, "hello");
+	strcpy(ref, "hello");
+	ft_memmove(dst + 1, dst, 4);
+	memmove(ref + 1, ref, 4);
+	check("overlap dst>src", memcmp(dst, ref, 5) == 0);
+
+	/* 6. 重複あり：dst が src より前（前からコピーで OK） */
+	strcpy(dst, "hello");
+	strcpy(ref, "hello");
+	ft_memmove(dst, dst + 1, 4);
+	memmove(ref, ref + 1, 4);
+	check("overlap dst<src", memcmp(dst, ref, 5) == 0);
+
+	/* 7. バイナリデータ */
+	unsigned char	bin[8] = {0x00, 0xFF, 0x7F, 0x80, 0x01, 0x02, 0x03, 0x04};
+	unsigned char	bin_ref[8];
+	memcpy(bin_ref, bin, 8);
+	ft_memmove(bin, bin + 2, 4);
+	memmove(bin_ref, bin_ref + 2, 4);
+	check("binary data", memcmp(bin, bin_ref, 8) == 0);
+
+	return (0);
 }
