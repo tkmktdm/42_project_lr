@@ -1,33 +1,55 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_calloc.c                                        :+:      :+:    :+:   */
+/*   ft_strtrim.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/04/25 12:48:50 by htakumi           #+#    #+#             */
-/*   Updated: 2026/04/26 15:04:02 by htakumi          ###   ########.fr       */
+/*   Created: 2026/04/26 17:41:54 by htakumi           #+#    #+#             */
+/*   Updated: 2026/04/26 18:08:49 by htakumi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include <stdlib.h>
 
-void	*ft_calloc(size_t count, size_t size)
+size_t	*search_word(char const s, char const *word)
 {
-	unsigned char	*p;
-	size_t			i;
-	size_t			total;
+	size_t	i;
 
 	i = 0;
-	total = count * size;
-	p = malloc(total);
-	if (!p)
+	while (word[i])
+		if (s == word[i])
+			return (1);
+	return (0);
+}
+
+char	*ft_strtrim(char const *s1, char const *set)
+{
+	char	*p1;
+	size_t	count;
+	size_t	i;
+	size_t	j;
+
+	i = 0;
+	j = 0;
+	if (!p1)
 		return (NULL);
-	while (i < total)
+	while (s1[i])
 	{
-		p[i] = 0;
+		if (!search_word(s1[i], set))
+			count++;
 		i++;
 	}
-	return ((void *)p);
+	p1 = malloc(sizeof(char) * count + 1);
+	while (s1[i])
+	{
+		if (!search_word(s1[i], set))
+			count++;
+		i++;
+	}
+	p1[i] = '\0';
+	return (p1);
 }
+
+// hello

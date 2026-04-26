@@ -1,33 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_calloc.c                                        :+:      :+:    :+:   */
+/*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/04/25 12:48:50 by htakumi           #+#    #+#             */
-/*   Updated: 2026/04/26 15:04:02 by htakumi          ###   ########.fr       */
+/*   Created: 2026/04/26 17:22:25 by htakumi           #+#    #+#             */
+/*   Updated: 2026/04/26 17:42:30 by htakumi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include <stdlib.h>
 
-void	*ft_calloc(size_t count, size_t size)
+char	*ft_strjoin(char const *s1, char const *s2)
 {
-	unsigned char	*p;
-	size_t			i;
-	size_t			total;
+	size_t	len;
+	char	*dest;
+	char	*ptr;
 
-	i = 0;
-	total = count * size;
-	p = malloc(total);
-	if (!p)
+	if (!s1 || !s2)
 		return (NULL);
-	while (i < total)
-	{
-		p[i] = 0;
-		i++;
-	}
-	return ((void *)p);
+	len = ft_strlen(s1) + ft_strlen(s2);
+	dest = malloc(len + 1);
+	if (!dest)
+		return (NULL);
+	ptr = dest;
+	while (*s1)
+		*ptr++ = *s1++;
+	while (*s2)
+		*ptr++ = *s2++;
+	*ptr = '\0';
+	return (dest);
 }
