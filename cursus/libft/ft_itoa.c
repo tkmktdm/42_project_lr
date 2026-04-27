@@ -1,55 +1,54 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strtrim.c                                       :+:      :+:    :+:   */
+/*   ft_itoa.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/04/26 17:41:54 by htakumi           #+#    #+#             */
-/*   Updated: 2026/04/26 18:08:49 by htakumi          ###   ########.fr       */
+/*   Created: 2026/04/27 00:00:00 by htakumi           #+#    #+#             */
+/*   Updated: 2026/04/27 00:00:00 by htakumi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include <stdlib.h>
 
-size_t	*search_word(char const s, char const *word)
+static int	count_digits(long n)
 {
-	size_t	i;
+	int	count;
 
-	i = 0;
-	while (word[i])
-		if (s == word[i])
-			return (1);
-	return (0);
+	count = (n <= 0);
+	while (n)
+	{
+		n /= 10;
+		count++;
+	}
+	return (count);
 }
 
-char	*ft_strtrim(char const *s1, char const *set)
+char	*ft_itoa(int n)
 {
-	char	*p1;
-	size_t	count;
-	size_t	i;
-	size_t	j;
+	long	num;
+	int		len;
+	char	*str;
 
-	i = 0;
-	j = 0;
-	if (!p1)
+	num = (long)n;
+	len = count_digits(num);
+	str = malloc(len + 1);
+	if (!str)
 		return (NULL);
-	while (s1[i])
+	str[len] = '\0';
+	if (num < 0)
 	{
-		if (!search_word(s1[i], set))
-			count++;
-		i++;
+		str[0] = '-';
+		num = -num;
 	}
-	p1 = malloc(sizeof(char) * count + 1);
-	while (s1[i])
+	while (num > 0)
 	{
-		if (!search_word(s1[i], set))
-			count++;
-		i++;
+		str[--len] = '0' + (num % 10);
+		num /= 10;
 	}
-	p1[i] = '\0';
-	return (p1);
+	if (n == 0)
+		str[0] = '0';
+	return (str);
 }
-
-// hello
