@@ -1,38 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_atoi.c                                          :+:      :+:    :+:   */
+/*   ft_lstdelone.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/04/23 13:37:42 by htakumi           #+#    #+#             */
-/*   Updated: 2026/04/24 10:32:33 by htakumi          ###   ########.fr       */
+/*   Created: 2026/04/28 20:15:50 by htakumi           #+#    #+#             */
+/*   Updated: 2026/04/28 20:25:45 by htakumi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
+#include <stdlib.h>
 
-int	ft_atoi(const char *nptr)
+void	ft_lstdelone(t_list *lst, void (*del)(void *))
 {
-	int		mflg;
-	long	n;
-
-	n = 0;
-	mflg = 0;
-	while ((*nptr >= 9 && *nptr <= 13) || *nptr == ' ')
-		nptr++;
-	if (*nptr == '+' || *nptr == '-')
-	{
-		if (*nptr == '-')
-			mflg++;
-		nptr++;
-	}
-	while (*nptr >= '0' && *nptr <= '9')
-	{
-		n = n * 10 + (*nptr - '0');
-		nptr++;
-	}
-	if (mflg % 2 == 1)
-		n = -n;
-	return (n);
+	if (!lst || !del)
+		return ;
+	del(lst->content);
+	free(lst);
 }

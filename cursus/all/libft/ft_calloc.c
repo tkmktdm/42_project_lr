@@ -3,16 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   ft_calloc.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kokubo <kokubo@student.42.fr>              +#+  +:+       +#+        */
+/*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/22 20:15:00 by kokubo            #+#    #+#             */
-/*   Updated: 2026/04/23 01:00:00 by kokubo           ###   ########.fr       */
+/*   Updated: 2026/04/28 22:19:53 by htakumi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include <stdlib.h>
-#include <limits.h>
 
 void	*ft_calloc(size_t count, size_t size)
 {

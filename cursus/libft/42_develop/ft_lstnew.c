@@ -1,20 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_isascii.c                                       :+:      :+:    :+:   */
+/*   ft_lstnew.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/04/23 16:55:54 by htakumi           #+#    #+#             */
-/*   Updated: 2026/04/24 10:33:03 by htakumi          ###   ########.fr       */
+/*   Created: 2026/04/28 10:09:37 by htakumi           #+#    #+#             */
+/*   Updated: 2026/04/28 10:20:10 by htakumi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
+#include <stdlib.h>
 
-int	ft_isascii(int c)
+t_list	*ft_lstnew(void *content)
 {
-	if (c >= 0 && c <= 127)
-		return (1);
-	return (0);
+	t_list	*p;
+
+	p = malloc(sizeof(t_list));
+	if (!p)
+		return (NULL);
+	p->content = content;
+	p->next = NULL;
+	return (p);
 }
