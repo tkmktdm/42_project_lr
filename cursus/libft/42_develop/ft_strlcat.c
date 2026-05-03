@@ -6,7 +6,7 @@
 /*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/25 08:51:33 by htakumi           #+#    #+#             */
-/*   Updated: 2026/04/25 12:33:43 by htakumi          ###   ########.fr       */
+/*   Updated: 2026/05/03 11:54:39 by htakumi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ size_t	ft_strlcat(char *dst, const char *src, size_t size)
 	dlen = 0;
 	slen = 0;
 	i = 0;
+	if (size == 0)
+		return (ft_strlen(src));
 	while (dst[dlen])
 		dlen++;
 	while (src[slen])

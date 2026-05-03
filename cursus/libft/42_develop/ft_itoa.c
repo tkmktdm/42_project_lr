@@ -1,33 +1,56 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_calloc.c                                        :+:      :+:    :+:   */
+/*   ft_itoa.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/04/25 12:48:50 by htakumi           #+#    #+#             */
-/*   Updated: 2026/04/26 15:04:02 by htakumi          ###   ########.fr       */
+/*   Created: 2026/04/27 14:27:50 by htakumi           #+#    #+#             */
+/*   Updated: 2026/04/27 15:33:33 by htakumi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include <stdlib.h>
 
-void	*ft_calloc(size_t count, size_t size)
+static int	count_digits(int n)
 {
-	unsigned char	*p;
-	size_t			i;
-	size_t			total;
+	int	c;
 
-	i = 0;
-	total = count * size;
-	p = malloc(total);
-	if (!p)
-		return (NULL);
-	while (i < total)
+	c = 0;
+	if (n <= 0)
+		c = 1;
+	while (n)
 	{
-		p[i] = 0;
-		i++;
+		n /= 10;
+		c++;
 	}
-	return ((void *)p);
+	return (c);
+}
+
+char	*ft_itoa(int n)
+{
+	size_t	len;
+	char	*res;
+	long	nbr;
+
+	len = count_digits(n);
+	res = (char *)malloc(sizeof(char) * (len + 1));
+	if (!res)
+		return (NULL);
+	res[len] = '\0';
+	nbr = n;
+	if (nbr < 0)
+	{
+		res[0] = '-';
+		nbr = -nbr;
+	}
+	if (nbr == 0)
+		res[0] = '0';
+	while (nbr > 0)
+	{
+		res[--len] = (nbr % 10) + '0';
+		nbr /= 10;
+	}
+	return (res);
 }

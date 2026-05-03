@@ -1,21 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstadd_front.c                                  :+:      :+:    :+:   */
+/*   ft_calloc.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/04/27 00:00:00 by htakumi           #+#    #+#             */
-/*   Updated: 2026/04/27 00:00:00 by htakumi          ###   ########.fr       */
+/*   Created: 2026/04/25 12:48:50 by htakumi           #+#    #+#             */
+/*   Updated: 2026/04/28 22:20:09 by htakumi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
+#include <limits.h>
+#include <stdlib.h>
 
-void	ft_lstadd_front(t_list **lst, t_list *new)
+void	*ft_calloc(size_t count, size_t size)
 {
-	if (!lst || !new)
-		return ;
-	new->next = *lst;
-	*lst = new;
+	unsigned char	*p;
+	size_t			i;
+	size_t			total;
+
+	i = 0;
+	if (size != 0 && count > (size_t)(-1) / size)
+		return (NULL);
+	total = count * size;
+	p = (unsigned char *)malloc(total);
+	if (!p)
+		return (NULL);
+	while (i < total)
+	{
+		p[i] = 0;
+		i++;
+	}
+	return ((void *)p);
 }
