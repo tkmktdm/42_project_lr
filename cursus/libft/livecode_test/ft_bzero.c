@@ -1,38 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_atoi.c                                          :+:      :+:    :+:   */
+/*   ft_bzero.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/04/23 13:37:42 by htakumi           #+#    #+#             */
-/*   Updated: 2026/05/04 18:46:21 by htakumi          ###   ########.fr       */
+/*   Created: 2026/05/04 12:52:30 by htakumi           #+#    #+#             */
+/*   Updated: 2026/05/04 12:56:33 by htakumi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int	ft_atoi(const char *nptr)
+void	ft_bzero(void *s, size_t n)
 {
-	int		mflg;
-	long	n;
+	unsigned char	*p;
+	size_t			i;
 
-	n = 0;
-	mflg = 0;
-	while ((*nptr >= 9 && *nptr <= 13) || *nptr == ' ')
-		nptr++;
-	if (*nptr == '+' || *nptr == '-')
+	i = 0;
+	p = (unsigned char *)s;
+	while (i < n)
 	{
-		if (*nptr == '-')
-			mflg++;
-		nptr++;
+		p[i] = 0;
+		i++;
 	}
-	while (*nptr >= '0' && *nptr <= '9')
-	{
-		n = n * 10 + (*nptr - '0');
-		nptr++;
-	}
-	if (mflg % 2 == 1)
-		n = -n;
-	return ((int)n);
 }
