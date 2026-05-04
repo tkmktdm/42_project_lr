@@ -6,7 +6,7 @@
 /*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/27 14:46:29 by htakumi           #+#    #+#             */
-/*   Updated: 2026/04/27 15:16:37 by htakumi          ###   ########.fr       */
+/*   Updated: 2026/05/04 19:19:41 by htakumi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,9 @@
 
 char	*ft_strmapi(char const *s, char (*f)(unsigned int, char))
 {
-	char	*p;
-	size_t	len;
-	size_t	i;
+	char			*p;
+	size_t			len;
+	unsigned int	i;
 
 	if (!s)
 		return (NULL);

@@ -6,13 +6,14 @@
 /*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/27 13:36:20 by htakumi           #+#    #+#             */
-/*   Updated: 2026/04/27 14:26:36 by htakumi          ###   ########.fr       */
+/*   Updated: 2026/05/04 12:29:38 by htakumi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "libft.h"
 #include <stdlib.h>
 
-size_t	count_words(char const *s, char c)
+static size_t	count_words(char const *s, char c)
 {
 	size_t	count;
 
@@ -31,7 +32,7 @@ size_t	count_words(char const *s, char c)
 	return (count);
 }
 
-char	*make_word(char const *s, char c, size_t *i)
+static char	*make_word(char const *s, char c, size_t *i)
 {
 	char	*word;
 	size_t	j;
@@ -56,7 +57,7 @@ char	*make_word(char const *s, char c, size_t *i)
 	return (word);
 }
 
-void	free_word(char **res, size_t n)
+static void	free_word(char **res, size_t n)
 {
 	while (n > 0)
 		free(res[--n]);

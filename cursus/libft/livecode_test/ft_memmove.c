@@ -1,39 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strnstr.c                                       :+:      :+:    :+:   */
+/*   ft_memmove.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/04/25 11:38:16 by htakumi           #+#    #+#             */
-/*   Updated: 2026/05/04 21:01:31 by htakumi          ###   ########.fr       */
+/*   Created: 2026/05/04 12:56:55 by htakumi           #+#    #+#             */
+/*   Updated: 2026/05/04 19:28:49 by htakumi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_strnstr(const char *big, const char *little, size_t len)
+void	*ft_memmove(void *dest, const void *src, size_t n)
 {
-	size_t	i;
-	size_t	j;
-	size_t	llen;
+	unsigned char		*d;
+	const unsigned char	*s;
+	size_t				i;
 
-	if (little[0] == '\0')
-		return ((char *)big);
 	i = 0;
-	llen = 0;
-	if (len == 0)
-		return (NULL);
-	while (little[llen])
-		llen++;
-	while (big[i] && i + llen <= len)
-	{
-		j = 0;
-		while (j < llen && big[i + j] == little[j])
-			j++;
-		if (j == llen)
-			return ((char *)big + i);
-		i++;
-	}
-	return (NULL);
+	d = (unsigned char *)dest;
+	s = (const unsigned char *)src;
+	return (dest);
 }
