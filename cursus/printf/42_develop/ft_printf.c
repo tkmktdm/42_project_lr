@@ -6,7 +6,7 @@
 /*   By: hibitakumi <hibitakumi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/07 19:52:31 by hibitakumi        #+#    #+#             */
-/*   Updated: 2026/05/12 09:21:30 by hibitakumi       ###   ########.fr       */
+/*   Updated: 2026/05/13 08:01:20 by hibitakumi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,23 +47,37 @@ int ft_printf(const char *format, ...)
     fmt = (char *)format;
     va_start(ap, fmt);
 
-    split = ft_strcount(fmt, '%');
-    printf("%d-----", split);
-    // while(fmt != NULL)
-    // {
-    //     while (*fmt != '\0')
-    //     {
-    //         write(1, fmt, 1);
-    //         fmt++;
-    //     }
-    //     fmt = va_arg(ap, char*);
-    // }
+    // split = ft_strcount(fmt, '%');
+    // printf("%d-----", split);
+    while(*fmt != '\0')
+    {
+        // printf("%c", *fmt);
+        if (*fmt == '%')
+        {
+            fmt++;
+            if (*fmt == '%')
+            {
+                write(1, fmt, 1);
+            }
+            else {
+                fmt--;
+                while (*fmt != '\0')
+                {
+                    write(1, fmt, 1);
+                    fmt++;
+                }
+            }
+        }
+        // fmt = va_arg(ap, char*);
+        fmt++;
+    }
     va_end(ap);
     return 0;
 }
 
 int main() {
     int s = 2;
+    ft_printf("%s\n", "wolrd");
     // ft_printf("h%e%%l%lo\n", "world");
     // printf("%s", "aa");
     // printf("%p", 'a');
@@ -76,15 +90,9 @@ int main() {
     
     // printf("--------\n");
     // int count = printf("%s\n", "aaa");
-    // printf("aaa", "bbb");
-    // printf("-\n");
-    // printf("%");
-    // printf("--\n");
-    // printf("%%");
-    // printf("---\n");
-    printf("%%%");
-    printf("----\n");
-    printf("%%%%");
+    // printf("%%%");
+    // printf("----\n");
+    // printf("%%%%");
     // printf("count: %d\n", count);
 
     return 0;
