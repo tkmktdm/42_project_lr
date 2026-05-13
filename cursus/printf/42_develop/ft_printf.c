@@ -6,13 +6,14 @@
 /*   By: hibitakumi <hibitakumi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/07 19:52:31 by hibitakumi        #+#    #+#             */
-/*   Updated: 2026/05/13 08:01:20 by hibitakumi       ###   ########.fr       */
+/*   Updated: 2026/05/13 23:55:29 by hibitakumi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
 #include <stdio.h>
 #include "printf.h"
+#include "../includes/ft_printf.h"
 
 size_t	ft_strcount(const char *s, char word)
 {
@@ -30,49 +31,34 @@ size_t	ft_strcount(const char *s, char word)
 
 int ft_printf(const char *format, ...)
 {
-/**
- * 可変引数の要素１つずつ取り出す方法
- * 最初の引数は呼び出した第一引数のもので呼べるが
- * 第二引数以降はva_arg(ap, type)の形でアクセスする必要がある
-    fmt = (char *)format;
-    va_start(ap, fmt);
-    printf("fmt: %s\n", fmt);
-    printf("fmt: %s\n", va_arg(ap, char*));
-    va_end(ap);
-*/
     va_list ap;
     char *fmt;
-    int split;
 
     fmt = (char *)format;
     va_start(ap, fmt);
-
-    // split = ft_strcount(fmt, '%');
-    // printf("%d-----", split);
     while(*fmt != '\0')
     {
-        // printf("%c", *fmt);
         if (*fmt == '%')
         {
             fmt++;
-            if (*fmt == '%')
-            {
-                write(1, fmt, 1);
-            }
-            else {
-                fmt--;
-                while (*fmt != '\0')
-                {
-                    write(1, fmt, 1);
-                    fmt++;
-                }
-            }
+            ft_handle_conversion(*fmt, &ap);
         }
-        // fmt = va_arg(ap, char*);
+        else
+            write(1, fmt, 1);
         fmt++;
     }
     va_end(ap);
     return 0;
+}
+
+void ft_handle_conversion(char c, va_list *ap)
+{
+    if(c == '%')
+        write(1, c, 1);
+    else if (c == 's')
+    {
+        ft_put
+    }
 }
 
 int main() {
