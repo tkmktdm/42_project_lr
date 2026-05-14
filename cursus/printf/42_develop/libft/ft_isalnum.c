@@ -1,25 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_printf.h                                        :+:      :+:    :+:   */
+/*   ft_isalnum.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hibitakumi <hibitakumi@student.42.fr>      +#+  +:+       +#+        */
+/*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/04/26 16:17:10 by htakumi           #+#    #+#             */
-/*   Updated: 2026/05/14 21:29:33 by hibitakumi       ###   ########.fr       */
+/*   Created: 2026/04/23 16:41:05 by htakumi           #+#    #+#             */
+/*   Updated: 2026/04/25 12:29:56 by htakumi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_PRINTF_H
-# define FT_PRINTF_H
+#include "libft.h"
 
-# include <stdarg.h>
-# include <stddef.h>
-
-typedef struct s_list
+int	ft_isalnum(int c)
 {
-	void			*content;
-	struct s_list	*next;
-}					t_list;
-
-#endif
+	if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || (c >= '0'
+			&& c <= '9'))
+		return (1);
+	return (0);
+}

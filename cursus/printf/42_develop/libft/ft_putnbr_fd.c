@@ -1,25 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_printf.h                                        :+:      :+:    :+:   */
+/*   ft_putnbr_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hibitakumi <hibitakumi@student.42.fr>      +#+  +:+       +#+        */
+/*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/04/26 16:17:10 by htakumi           #+#    #+#             */
-/*   Updated: 2026/05/14 21:29:33 by hibitakumi       ###   ########.fr       */
+/*   Created: 2026/04/28 09:55:37 by htakumi           #+#    #+#             */
+/*   Updated: 2026/04/28 10:03:22 by htakumi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_PRINTF_H
-# define FT_PRINTF_H
+#include "libft.h"
+#include <unistd.h>
 
-# include <stdarg.h>
-# include <stddef.h>
-
-typedef struct s_list
+void	ft_putnbr_fd(int n, int fd)
 {
-	void			*content;
-	struct s_list	*next;
-}					t_list;
+	long	nbr;
+	char	s;
 
-#endif
+	nbr = n;
+	if (nbr < 0)
+	{
+		write(fd, "-", 1);
+		nbr = -nbr;
+	}
+	if (nbr >= 10)
+		ft_putnbr_fd(nbr / 10, fd);
+	s = nbr % 10 + '0';
+	write(fd, &s, 1);
+}

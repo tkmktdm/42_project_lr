@@ -6,7 +6,7 @@
 /*   By: hibitakumi <hibitakumi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/07 19:52:31 by hibitakumi        #+#    #+#             */
-/*   Updated: 2026/05/13 23:55:29 by hibitakumi       ###   ########.fr       */
+/*   Updated: 2026/05/15 07:54:13 by hibitakumi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,50 +15,40 @@
 #include "printf.h"
 #include "../includes/ft_printf.h"
 
-size_t	ft_strcount(const char *s, char word)
-{
-	size_t	len;
-
-	len = 0;
-	while (*s)
-	{
-		if (*s == word)
-			len++;
-		s++;
-	}
-	return (len);
-}
-
 int ft_printf(const char *format, ...)
 {
     va_list ap;
-    char *fmt;
+    int count;
 
-    fmt = (char *)format;
-    va_start(ap, fmt);
-    while(*fmt != '\0')
+    count = 0;
+    va_start(ap, format);
+    while(*format)
     {
-        if (*fmt == '%')
+        if (*format == '%')
         {
-            fmt++;
-            ft_handle_conversion(*fmt, &ap);
+            format++;
+            count += ft_handle_conversion(*format, &ap);
         }
         else
-            write(1, fmt, 1);
-        fmt++;
+            count += write(1, format, 1);
+        format++;
     }
     va_end(ap);
-    return 0;
+    return count;
 }
 
-void ft_handle_conversion(char c, va_list *ap)
+int ft_handle_conversion(char c, va_list *ap)
 {
+    int i;
+
+    i = 0;
     if(c == '%')
-        write(1, c, 1);
+        write(1, "%", 1);
     else if (c == 's')
-    {
-        ft_put
-    }
+        ft_putstr_fd(va_arg(*ap, int), 1);
+    else if (c == 'c')
+        ft_putchar_fd(va_arg(*ap, int), 1);
+    return ft_strlen(va_arg(*ap, int));
 }
 
 int main() {

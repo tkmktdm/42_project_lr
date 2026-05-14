@@ -1,25 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_printf.h                                        :+:      :+:    :+:   */
+/*   ft_isalpha.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hibitakumi <hibitakumi@student.42.fr>      +#+  +:+       +#+        */
+/*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/04/26 16:17:10 by htakumi           #+#    #+#             */
-/*   Updated: 2026/05/14 21:29:33 by hibitakumi       ###   ########.fr       */
+/*   Created: 2026/04/23 15:48:58 by htakumi           #+#    #+#             */
+/*   Updated: 2026/04/24 10:32:58 by htakumi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_PRINTF_H
-# define FT_PRINTF_H
+#include "libft.h"
 
-# include <stdarg.h>
-# include <stddef.h>
-
-typedef struct s_list
+int	ft_isalpha(int c)
 {
-	void			*content;
-	struct s_list	*next;
-}					t_list;
-
-#endif
+	if ((c >= 'A' && 'Z' >= c) || (c >= 'a' && 'z' >= c))
+		return (1);
+	return (0);
+}

@@ -1,40 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*   ft_strchr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hibitakumi <hibitakumi@student.42.fr>      +#+  +:+       +#+        */
+/*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/04/23 14:20:02 by htakumi           #+#    #+#             */
-/*   Updated: 2026/05/11 20:22:33 by hibitakumi       ###   ########.fr       */
+/*   Created: 2026/04/25 09:45:07 by htakumi           #+#    #+#             */
+/*   Updated: 2026/04/28 22:03:01 by htakumi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "libft.h"
 
-size_t	ft_strlen(const char *s)
+char	*ft_strchr(const char *s, int c)
 {
-	size_t	len;
-
-	len = 0;
-	while (*s)
+	while (*s != '\0')
 	{
-		len++;
+		if ((unsigned char)*s == (unsigned char)c)
+			return ((char *)s);
 		s++;
 	}
-	return (len);
-}
-
-size_t	ft_strcount(const char *s, char word)
-{
-	size_t	len;
-
-	len = 0;
-	while (*s)
-	{
-		if (*s == word)
-			len++;
-		s++;
-	}
-	return (len);
+	if ((unsigned char)*s == (unsigned char)c)
+		return ((char *)s);
+	return (NULL);
 }
