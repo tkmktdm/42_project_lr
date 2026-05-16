@@ -3,31 +3,30 @@
 /*                                                        :::      ::::::::   */
 /*   ft_print_hex.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hibitakumi <hibitakumi@student.42.fr>      +#+  +:+       +#+        */
+/*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/15 14:10:23 by hibitakumi        #+#    #+#             */
-/*   Updated: 2026/05/16 09:43:41 by hibitakumi       ###   ########.fr       */
+/*   Updated: 2026/05/16 12:57:24 by htakumi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "printf.h"
+#include "../includes/ft_printf.h"
 
-void	ft_putnbr_base(int nbr, char *base);
-
-int ft_print_hex(va_list *ap, int upper)
+int	ft_print_hex(va_list *ap, int upper)
 {
-    int nbr;
-    int len;
-    char *str;
+	unsigned int	u;
+	int				len;
 
-    nbr = va_arg(*ap, int);
-    if (upper)
-        ft_putnbr_base(nbr, "0123456789ABCDEF");
-    else
-        ft_putnbr_base(nbr, "0123456789abcdef");
-    str = ft_itoa(nbr);
-    ft_putnbr_fd(str, 1);
-    len = ft_strlen(str);
-    free(str);
-    return len;
+	u = va_arg(*ap, unsigned int);
+	if (upper)
+		ft_putnbr_base(u, "0123456789ABCDEF");
+	else
+		ft_putnbr_base(u, "0123456789abcdef");
+	len = 1;
+	while (u >= 16)
+	{
+		u /= 16;
+		len++;
+	}
+	return (len);
 }
