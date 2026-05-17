@@ -5,12 +5,12 @@ CFLAGS		= -Wall -Wextra -Werror
 AR			= ar rcs
 RM			= rm -f
 
-LIBFT_DIR	= srcs/libft
+LIBFT_DIR	= libft
 LIBFT		= $(LIBFT_DIR)/libft.a
 
-SRCS		= $(wildcard srcs/*.c)
+SRCS		= $(wildcard *.c)
 OBJS		= $(SRCS:.c=.o)
-HEADERS		= includes/ft_printf.h
+HEADERS		= ft_printf.h
 
 all: $(NAME)
 
@@ -22,7 +22,7 @@ $(NAME): $(LIBFT) $(OBJS)
 	$(AR) $(NAME) $(OBJS)
 
 %.o: %.c $(HEADERS)
-	$(CC) $(CFLAGS) -I includes -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
 	$(RM) $(OBJS)

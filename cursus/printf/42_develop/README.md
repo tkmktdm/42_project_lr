@@ -1,20 +1,26 @@
 *This project has been created as part of the 42 curriculum by htakumi.*
 
-# libft — 自作Cライブラリ
+# ft_printf — printf 再実装
 
 ## Description
 
-libft は、C標準ライブラリの関数を自前で再実装した独自のCライブラリです。
-42のカリキュラム全体を通じて活用できる汎用的な関数群を一から実装することで、
-メモリ操作・文字列処理・リスト操作の仕組みを深く理解することを目的としています。
+`ft_printf` は、C標準ライブラリの `printf()` を自前で再実装したライブラリです。
+可変長引数（variadic functions）の仕組みを学ぶことを目的としており、
+`libftprintf.a` として提供されます。
 
-ライブラリは以下の3パートで構成されています：
+### 対応フォーマット指定子
 
-| パート | 内容                                   |
-| ------ | -------------------------------------- |
-| Part 1 | libc標準関数の再実装（23関数）         |
-| Part 2 | libcにないユーティリティ関数（11関数） |
-| Part 3 | 連結リスト操作関数（9関数）            |
+| 指定子 | 説明                                                                  |
+| ------ | --------------------------------------------------------------------- |
+| `%c` | 1文字を出力                                                           |
+| `%s` | 文字列を出力（NULL の場合は `(null)`）                              |
+| `%p` | ポインタアドレスを `0x` 付き16進数で出力（NULL の場合は `(nil)`） |
+| `%d` | 10進数の符号付き整数を出力                                            |
+| `%i` | 10進数の符号付き整数を出力                                            |
+| `%u` | 10進数の符号なし整数を出力                                            |
+| `%x` | 16進数（小文字）で出力                                                |
+| `%X` | 16進数（大文字）で出力                                                |
+| `%%` | `%` 文字を出力                                                      |
 
 ---
 
@@ -23,13 +29,13 @@ libft は、C標準ライブラリの関数を自前で再実装した独自のC
 ### ビルド
 
 ```bash
-# libft.a をビルドする（全パート含む）
+# libftprintf.a をビルド
 make
 
 # オブジェクトファイルを削除
 make clean
 
-# オブジェクトファイルと libft.a を削除
+# オブジェクトファイルと libftprintf.a を削除
 make fclean
 
 # 再ビルド（fclean + all）
@@ -39,130 +45,102 @@ make re
 ### プロジェクトへの組み込み方
 
 ```bash
-# ヘッダをインクルードし、libft.a にリンクしてコンパイル
-cc -Wall -Wextra -Werror main.c -L. -lft -I. -o program
+# libftprintf.a にリンクしてコンパイル
+cc -Wall -Wextra -Werror main.c -L. -lftprintf -I includes -o program
 ```
 
 ```c
-#include "libft.h"
+#include "ft_printf.h"
 
 int main(void)
 {
-    char    **words;
-    int     i;
+    int len;
 
-    words = ft_split("hello world 42", ' ');
-    i = 0;
-    while (words[i])
-    {
-        ft_putendl_fd(words[i], 1);
-        free(words[i++]);
-    }
-    free(words);
+    len = ft_printf("Hello, %s! Number: %d, Hex: %x\n", "world", 42, 255);
+    ft_printf("printed %d chars\n", len);
     return (0);
 }
 ```
 
 ---
 
-## ライブラリの詳細説明
+## アルゴリズムとデータ構造の説明
 
-### Part 1 — libc 関数の再実装
+### 全体の処理フロー
 
-標準ライブラリと同じ仕様で実装しています。
-
-#### 文字判定系
-
-| 関数           | プロトタイプ              | 説明                                   |
-| -------------- | ------------------------- | -------------------------------------- |
-| `ft_isalpha` | `int ft_isalpha(int c)` | アルファベットなら1、それ以外は0を返す |
-| `ft_isdigit` | `int ft_isdigit(int c)` | 数字（0〜9）なら1、それ以外は0を返す   |
-| `ft_isalnum` | `int ft_isalnum(int c)` | アルファベットまたは数字なら1を返す    |
-| `ft_isascii` | `int ft_isascii(int c)` | ASCII文字（0〜127）なら1を返す         |
-| `ft_isprint` | `int ft_isprint(int c)` | 印字可能文字なら1を返す                |
-| `ft_toupper` | `int ft_toupper(int c)` | 小文字を大文字に変換して返す           |
-| `ft_tolower` | `int ft_tolower(int c)` | 大文字を小文字に変換して返す           |
-
-#### メモリ操作系
-
-| 関数           | プロトタイプ                                                 | 説明                                   |
-| -------------- | ------------------------------------------------------------ | -------------------------------------- |
-| `ft_memset`  | `void *ft_memset(void *b, int c, size_t len)`              | メモリ領域を指定バイト値で埋める       |
-| `ft_bzero`   | `void ft_bzero(void *s, size_t n)`                         | メモリ領域をゼロで埋める               |
-| `ft_memcpy`  | `void *ft_memcpy(void *dst, const void *src, size_t n)`    | メモリをコピーする（重複不可）         |
-| `ft_memmove` | `void *ft_memmove(void *dst, const void *src, size_t len)` | メモリをコピーする（重複可）           |
-| `ft_memchr`  | `void *ft_memchr(const void *s, int c, size_t n)`          | メモリ内から最初に一致するバイトを探す |
-| `ft_memcmp`  | `int ft_memcmp(const void *s1, const void *s2, size_t n)`  | 2つのメモリ領域を比較する              |
-| `ft_calloc`  | `void *ft_calloc(size_t count, size_t size)`               | ゼロ初期化されたメモリを確保する       |
-
-#### 文字列操作系
-
-| 関数           | プロトタイプ                                                               | 説明                               |
-| -------------- | -------------------------------------------------------------------------- | ---------------------------------- |
-| `ft_strlen`  | `size_t ft_strlen(const char *s)`                                        | 文字列の長さを返す                 |
-| `ft_strlcpy` | `size_t ft_strlcpy(char *dst, const char *src, size_t dstsize)`          | NUL終端を保証してコピーする        |
-| `ft_strlcat` | `size_t ft_strlcat(char *dst, const char *src, size_t dstsize)`          | NUL終端を保証して連結する          |
-| `ft_strchr`  | `char *ft_strchr(const char *s, int c)`                                  | 文字列内で最初に一致する文字を探す |
-| `ft_strrchr` | `char *ft_strrchr(const char *s, int c)`                                 | 文字列内で最後に一致する文字を探す |
-| `ft_strncmp` | `int ft_strncmp(const char *s1, const char *s2, size_t n)`               | 2つの文字列をn文字まで比較する     |
-| `ft_strnstr` | `char *ft_strnstr(const char *haystack, const char *needle, size_t len)` | n文字以内で部分文字列を検索する    |
-| `ft_strdup`  | `char *ft_strdup(const char *s1)`                                        | 文字列を複製して新しいメモリに返す |
-| `ft_atoi`    | `int ft_atoi(const char *str)`                                           | 文字列を整数に変換する             |
-
----
-
-### Part 2 — 追加ユーティリティ関数
-
-libcにない独自関数です。
-
-| 関数              | プロトタイプ                                                       | 説明                                        |
-| ----------------- | ------------------------------------------------------------------ | ------------------------------------------- |
-| `ft_substr`     | `char *ft_substr(char const *s, unsigned int start, size_t len)` | 文字列から部分文字列を切り出す              |
-| `ft_strjoin`    | `char *ft_strjoin(char const *s1, char const *s2)`               | 2つの文字列を連結した新しい文字列を返す     |
-| `ft_strtrim`    | `char *ft_strtrim(char const *s1, char const *set)`              | 先頭・末尾から指定文字集合を除去する        |
-| `ft_split`      | `char **ft_split(char const *s, char c)`                         | 指定デリミタで文字列を分割し配列で返す      |
-| `ft_itoa`       | `char *ft_itoa(int n)`                                           | 整数を文字列に変換する（負数・INT_MIN対応） |
-| `ft_strmapi`    | `char *ft_strmapi(char const *s, char (*f)(unsigned int, char))` | 各文字に関数を適用した新しい文字列を返す    |
-| `ft_striteri`   | `void ft_striteri(char *s, void (*f)(unsigned int, char *))`     | 各文字にインプレースで関数を適用する        |
-| `ft_putchar_fd` | `void ft_putchar_fd(char c, int fd)`                             | 1文字を指定fdに出力する                     |
-| `ft_putstr_fd`  | `void ft_putstr_fd(char *s, int fd)`                             | 文字列を指定fdに出力する                    |
-| `ft_putendl_fd` | `void ft_putendl_fd(char *s, int fd)`                            | 文字列と改行を指定fdに出力する              |
-| `ft_putnbr_fd`  | `void ft_putnbr_fd(int n, int fd)`                               | 整数を指定fdに出力する                      |
-
----
-
-### Part 3 — 連結リスト操作
-
-`t_list` 構造体を使ったリスト操作関数です。
-
-```c
-typedef struct s_list
-{
-    void            *content;   // 任意のデータ
-    struct s_list   *next;      // 次のノードへのポインタ
-}   t_list;
+```
+ft_printf(format, ...)
+    │
+    ├─ 通常文字 → write(1, &c, 1)
+    │
+    └─ '%' 検出 → ft_handle_conversion(次の文字, &ap)
+                      │
+                      ├─ 'c' → ft_print_char
+                      ├─ 's' → ft_print_str
+                      ├─ 'p' → ft_print_ptr
+                      ├─ 'd','i' → ft_print_int
+                      ├─ 'u' → ft_print_uint
+                      ├─ 'x' → ft_print_hex(upper=0)
+                      ├─ 'X' → ft_print_hex(upper=1)
+                      └─ '%' → ft_print_percent
 ```
 
-| 関数                | プロトタイプ                                                                | 説明                                        |
-| ------------------- | --------------------------------------------------------------------------- | ------------------------------------------- |
-| `ft_lstnew`       | `t_list *ft_lstnew(void *content)`                                        | 新しいノードを作成する                      |
-| `ft_lstadd_front` | `void ft_lstadd_front(t_list **lst, t_list *new)`                         | リストの先頭にノードを追加する              |
-| `ft_lstsize`      | `int ft_lstsize(t_list *lst)`                                             | リストのノード数を返す                      |
-| `ft_lstlast`      | `t_list *ft_lstlast(t_list *lst)`                                         | 末尾ノードを返す                            |
-| `ft_lstadd_back`  | `void ft_lstadd_back(t_list **lst, t_list *new)`                          | リストの末尾にノードを追加する              |
-| `ft_lstdelone`    | `void ft_lstdelone(t_list *lst, void (*del)(void *))`                     | ノード1つを削除・解放する（次は解放しない） |
-| `ft_lstclear`     | `void ft_lstclear(t_list **lst, void (*del)(void *))`                     | リスト全体を削除・解放しNULLにする          |
-| `ft_lstiter`      | `void ft_lstiter(t_list *lst, void (*f)(void *))`                         | 各ノードのコンテンツに関数を適用する        |
-| `ft_lstmap`       | `t_list *ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *))` | 各ノードに関数を適用した新しいリストを返す  |
+### 可変長引数（va_list）
+
+`printf` は引数の数が実行時まで決まらないため、`<stdarg.h>` の仕組みを使います。
+
+```c
+va_list ap;
+va_start(ap, format);   // format の次の引数からセット
+va_arg(ap, int);        // 引数を1つ取り出す（型を指定）
+va_end(ap);             // 解放
+```
+
+`va_arg` は呼ぶたびに「次の引数」を取り出します。型は呼び出し側が保証する必要があります。
+
+### 基数変換（ft_putnbr_base）
+
+`%x`, `%X`, `%u` の出力に使う汎用的な基数変換関数です。
+
+```c
+void ft_putnbr_base(unsigned int n, char *base)
+{
+    // base = "0123456789abcdef" なら16進、"0123456789" なら10進
+    if (n >= ft_strlen(base))
+        ft_putnbr_base(n / ft_strlen(base), base);
+    write(1, &base[n % ft_strlen(base)], 1);
+}
+```
+
+再帰で上の桁から順に出力します。`unsigned int` を使うことで `%u` の最大値（4294967295）も正しく扱えます。
+
+### ポインタ出力（%p）
+
+ポインタは 64bit システムでは 8 バイトなので `unsigned long` で受け取ります。
+
+```c
+unsigned long addr = (unsigned long)va_arg(ap, void *);
+```
+
+- `addr == 0` のとき → `(nil)` を出力（Linux の printf に合わせる）
+- それ以外 → `"0x"` + 16進アドレスを出力
+
+`unsigned long` 用の再帰出力ヘルパー `ft_putptr_hex` を `static` 関数として `ft_print_ptr.c` 内に定義しています。
+
+### 戻り値（出力した文字数）
+
+各変換関数は出力した文字数を `int` で返します。`ft_printf` はそれを `count` に加算して最終的な出力文字数を返します。
 
 ---
 
 ## Resources
 
-- [C標準ライブラリリファレンス (cppreference)](https://en.cppreference.com/w/c)
-- [man pages](https://linux.die.net/man/3/)
+- [printf(3) — Linux man page](https://linux.die.net/man/3/printf)
+- [va_list / stdarg.h — cppreference](https://en.cppreference.com/w/c/variadic)
 - [42 Norm](https://cdn.intra.42.fr/pdf/pdf/960/norme.en.pdf)
+- [printfTester](https://github.com/Tripouille/printfTester)
 
 ### AI の使用について
 
-- **使用**: Part1~3のテスト生成の補助ツール、仕様書作成として使用
+- **バグ診断**: 型ミス・未定義動作・未使用変数などのコンパイルエラーの原因特定
+- **README の作成支援**: 本ファイルの構成・記述
