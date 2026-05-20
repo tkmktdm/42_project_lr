@@ -6,51 +6,36 @@
 /*   By: hibitakumi <hibitakumi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/07 19:52:31 by hibitakumi        #+#    #+#             */
-/*   Updated: 2026/05/18 07:54:52 by hibitakumi       ###   ########.fr       */
+/*   Updated: 2026/05/21 07:58:32 by hibitakumi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "get_next_line.h"
 
-int	ft_printf(const char *format, ...)
+#include<stdio.h>
+#define BUF_SIZE 512
+// fileが読まれると3が入る
+char *get_next_line(int fd)
 {
-	va_list	ap;
-	int		count;
-
-	count = 0;
-	va_start(ap, format);
-	while (*format)
+	int byte_num;
+	char buf[BUF_SIZE];
+	int i;
+	
+	i = 0;
+	if (fd == -1)
+		return NULL;
+	// ファイルから5バイト読み込み
+    byte_num = read(fd, &buf[0], BUF_SIZE);  // ファイルから5バイト読み込み
+	// printf("%d\n", byte_num);
+    if(byte_num == -1)  // ファイル読み込み失敗
+    {
+        fprintf(stdout, "ファイル読み込みエラー\n");
+        return NULL;
+    }
+	while (buf[i])
 	{
-		if (*format == '%')
-		{
-			format++;
-			count += ft_handle_conversion(*format, &ap);
-		}
-		else
-			count += write(1, format, 1);
-		format++;
+		write(1, &buf[i], 1);
+		i++;
 	}
-	va_end(ap);
-	return (count);
-}
-
-int	ft_handle_conversion(char c, va_list *ap)
-{
-	if (c == 'c')
-		return (ft_print_char(ap));
-	else if (c == 's')
-		return (ft_print_str(ap));
-	else if (c == 'p')
-		return (ft_print_ptr(ap));
-	else if (c == 'd' || c == 'i')
-		return (ft_print_int(ap));
-	else if (c == 'u')
-		return (ft_print_uint(ap));
-	else if (c == 'x')
-		return (ft_print_hex(ap, 0));
-	else if (c == 'X')
-		return (ft_print_hex(ap, 1));
-	else if (c == '%')
-		return (ft_print_percent());
-	return (0);
+	return ("s");
 }
