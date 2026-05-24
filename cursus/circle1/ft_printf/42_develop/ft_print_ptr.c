@@ -12,16 +12,6 @@
 
 #include "ft_printf.h"
 
-static void	ft_putptr_hex(unsigned long n)
-{
-	char	*base;
-
-	base = "0123456789abcdef";
-	if (n >= 16)
-		ft_putptr_hex(n / 16);
-	write(1, &base[n % 16], 1);
-}
-
 int	ft_print_ptr(va_list *ap)
 {
 	unsigned long	addr;
