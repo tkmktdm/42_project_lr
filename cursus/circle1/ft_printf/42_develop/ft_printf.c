@@ -3,34 +3,50 @@
 /*                                                        :::      ::::::::   */
 /*   ft_printf.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hibitakumi <hibitakumi@student.42.fr>      +#+  +:+       +#+        */
+/*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/07 19:52:31 by hibitakumi        #+#    #+#             */
-/*   Updated: 2026/05/23 18:05:46 by hibitakumi       ###   ########.fr       */
+/*   Updated: 2026/05/30 13:09:39 by htakumi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
+static int	do_convert(const char **fmt, va_list *ap)
+{
+	int	ret;
+
+	if (**fmt != '%')
+	{
+		ret = write(1, *fmt, 1);
+		(*fmt)++;
+		return (ret);
+	}
+	(*fmt)++;
+	if (!**fmt)
+		return (0);
+	ret = ft_handle_conversion(**fmt, ap);
+	(*fmt)++;
+	return (ret);
+}
+
 int	ft_printf(const char *format, ...)
 {
 	va_list	ap;
 	int		count;
+	int		ret;
 
-	if(!format)
-		return (0);
 	count = 0;
 	va_start(ap, format);
 	while (*format)
 	{
-		if (*format == '%')
+		ret = do_convert(&format, &ap);
+		if (ret == -1)
 		{
-			format++;
-			count += ft_handle_conversion(*format, &ap);
+			va_end(ap);
+			return (-1);
 		}
-		else
-			count += write(1, format, 1);
-		format++;
+		count += ret;
 	}
 	va_end(ap);
 	return (count);

@@ -6,7 +6,7 @@
 /*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/07 19:52:31 by hibitakumi        #+#    #+#             */
-/*   Updated: 2026/05/16 12:23:20 by htakumi          ###   ########.fr       */
+/*   Updated: 2026/05/30 12:53:54 by htakumi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 int	ft_print_percent(void)
 {
-	ft_putchar_fd('%', 1);
+	if (write(1, "%", 1) == -1)
+		return (-1);
 	return (1);
 }

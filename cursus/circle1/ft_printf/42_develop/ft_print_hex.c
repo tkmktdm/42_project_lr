@@ -6,7 +6,7 @@
 /*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/15 14:10:23 by hibitakumi        #+#    #+#             */
-/*   Updated: 2026/05/16 12:57:24 by htakumi          ###   ########.fr       */
+/*   Updated: 2026/05/30 15:00:10 by htakumi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,15 @@ int	ft_print_hex(va_list *ap, int upper)
 {
 	unsigned int	u;
 	int				len;
+	char			*base;
 
 	u = va_arg(*ap, unsigned int);
 	if (upper)
-		ft_putnbr_base(u, "0123456789ABCDEF");
+		base = "0123456789ABCDEF";
 	else
-		ft_putnbr_base(u, "0123456789abcdef");
+		base = "0123456789abcdef";
+	if (ft_putnbr_base(u, base) == -1)
+		return (-1);
 	len = 1;
 	while (u >= 16)
 	{
