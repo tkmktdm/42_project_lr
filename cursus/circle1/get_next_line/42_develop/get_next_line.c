@@ -6,7 +6,7 @@
 /*   By: hibitakumi <hibitakumi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/07 19:52:31 by hibitakumi        #+#    #+#             */
-/*   Updated: 2026/05/21 07:58:32 by hibitakumi       ###   ########.fr       */
+/*   Updated: 2026/05/23 17:02:45 by hibitakumi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ char *get_next_line(int fd)
 	int byte_num;
 	char buf[BUF_SIZE];
 	int i;
-	
+
 	i = 0;
 	if (fd == -1)
 		return NULL;
