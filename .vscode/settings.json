@@ -1,0 +1,23 @@
+{
+    "cSpell.words": [
+        "hibitakumi",
+        "htakumi"
+    ],
+    "files.insertFinalNewline": true,
+    "files.trimTrailingWhitespace": true,
+    "files.trimFinalNewlines": true,
+    "editor.insertSpaces": false,
+    "42header.email": "htakumi@student.42tokyo.jp",
+    "42header.username": "htakumi",
+    "editor.defaultFormatter": "keyhr.42-c-format",
+    "notebook.defaultFormatter": "keyhr.42-c-format",
+    "workbench.editor.enablePreview": false,
+    "[c]": {
+        "editor.defaultFormatter": "keyhr.42-c-format",
+        "editor.formatOnSave": true,
+    },
+    "files.autoSave": "afterDelay",
+    "claudeCode.preferredLocation": "panel",
+    "explorer.confirmDragAndDrop": false,
+    "explorer.confirmDelete": false
+}

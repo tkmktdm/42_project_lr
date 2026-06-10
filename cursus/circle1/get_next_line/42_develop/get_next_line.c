@@ -3,35 +3,35 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hibitakumi <hibitakumi@student.42.fr>      +#+  +:+       +#+        */
+/*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/07 19:52:31 by hibitakumi        #+#    #+#             */
-/*   Updated: 2026/05/23 17:02:45 by hibitakumi       ###   ########.fr       */
+/*   Updated: 2026/06/09 23:19:44 by htakumi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-
-#include<stdio.h>
+#include <stdio.h>
 #define BUF_SIZE 512
+
 // fileが読まれると3が入る
-char *get_next_line(int fd)
+char	*get_next_line(int fd)
 {
-	int byte_num;
-	char buf[BUF_SIZE];
-	int i;
+	int		byte_num;
+	char	buf[BUF_SIZE];
+	int		i;
 
 	i = 0;
 	if (fd == -1)
-		return NULL;
+		return (NULL);
 	// ファイルから5バイト読み込み
-    byte_num = read(fd, &buf[0], BUF_SIZE);  // ファイルから5バイト読み込み
+	byte_num = read(fd, &buf[0], BUF_SIZE);
 	// printf("%d\n", byte_num);
-    if(byte_num == -1)  // ファイル読み込み失敗
-    {
-        fprintf(stdout, "ファイル読み込みエラー\n");
-        return NULL;
-    }
+	if (byte_num == -1)
+	{
+		fprintf(stdout, "ファイル読み込みエラー\n");
+		return (NULL);
+	}
 	while (buf[i])
 	{
 		write(1, &buf[i], 1);
