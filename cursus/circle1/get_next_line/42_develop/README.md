@@ -1,26 +1,25 @@
 *This project has been created as part of the 42 curriculum by htakumi.*
 
-# ft_printf — printf 再実装
+# get_next_line — ファイルディスクリプターから1行ずつ読む
 
 ## Description
 
-`ft_printf` は、C標準ライブラリの `printf()` を自前で再実装したライブラリです。
-可変長引数（variadic functions）の仕組みを学ぶことを目的としており、
-`libftprintf.a` として提供されます。
+`get_next_line` は、ファイルディスクリプターから**1行ずつ**読み取る関数を実装するプロジェクトです。
+標準入力・通常ファイルのどちらに対しても、`read()` を繰り返し呼び出しながら
+`\n` が見つかるまでバッファーを蓄積し、1行を返します。
 
-### 対応フォーマット指定子
+このプロジェクトを通して、**static変数**を使って関数呼び出し間で状態（読み込みの続き=leftover）を
+保持する方法を学びます。
 
-| 指定子 | 説明                                                                  |
-| ------ | --------------------------------------------------------------------- |
-| `%c` | 1文字を出力                                                           |
-| `%s` | 文字列を出力（NULL の場合は `(null)`）                              |
-| `%p` | ポインタアドレスを `0x` 付き16進数で出力（NULL の場合は `(nil)`） |
-| `%d` | 10進数の符号付き整数を出力                                            |
-| `%i` | 10進数の符号付き整数を出力                                            |
-| `%u` | 10進数の符号なし整数を出力                                            |
-| `%x` | 16進数（小文字）で出力                                                |
-| `%X` | 16進数（大文字）で出力                                                |
-| `%%` | `%` 文字を出力                                                      |
+### 関数仕様
+
+| 関数 | プロトタイプ |
+|------|--------------|
+| `get_next_line` | `char *get_next_line(int fd);` |
+
+- 戻り値: 読み込んだ1行（末尾に`\n`を含む。ファイル末尾で`\n`がない場合は含まない）
+- 読むものがない/エラー時: `NULL`
+- 使用可能な外部関数: `read`, `malloc`, `free`
 
 ---
 
@@ -29,35 +28,47 @@
 ### ビルド
 
 ```bash
-# libftprintf.a をビルド
+# get_next_line.a をビルド（BUFFER_SIZEはデフォルト512）
 make
+
+# BUFFER_SIZEを指定してビルド
+make re BUFFER_SIZE=42
 
 # オブジェクトファイルを削除
 make clean
 
-# オブジェクトファイルと libftprintf.a を削除
+# オブジェクトファイルと get_next_line.a を削除
 make fclean
 
-# 再ビルド（fclean + all）
+# 再ビルド
 make re
+```
+
+### 動作確認（直接コンパイルする場合）
+
+評価時は以下のように直接コンパイルされる想定です（`-D BUFFER_SIZE` の有無どちらでも動作します）。
+
+```bash
+cc -Wall -Wextra -Werror -D BUFFER_SIZE=42 get_next_line.c get_next_line_utils.c main.c -o test
 ```
 
 ### プロジェクトへの組み込み方
 
-```bash
-# libftprintf.a にリンクしてコンパイル
-cc -Wall -Wextra -Werror main.c -L. -lftprintf -I includes -o program
-```
-
 ```c
-#include "ft_printf.h"
+#include "get_next_line.h"
 
 int main(void)
 {
-    int len;
+    int   fd;
+    char *line;
 
-    len = ft_printf("Hello, %s! Number: %d, Hex: %x\n", "world", 42, 255);
-    ft_printf("printed %d chars\n", len);
+    fd = open("file.txt", O_RDONLY);
+    while ((line = get_next_line(fd)) != NULL)
+    {
+        printf("%s", line);
+        free(line);
+    }
+    close(fd);
     return (0);
 }
 ```
@@ -69,78 +80,77 @@ int main(void)
 ### 全体の処理フロー
 
 ```
-ft_printf(format, ...)
+get_next_line(fd)
     │
-    ├─ 通常文字 → write(1, &c, 1)
+    ├─ static変数 g_leftover に「前回読みすぎた残り」を保持
     │
-    └─ '%' 検出 → ft_handle_conversion(次の文字, &ap)
-                      │
-                      ├─ 'c' → ft_print_char
-                      ├─ 's' → ft_print_str
-                      ├─ 'p' → ft_print_ptr
-                      ├─ 'd','i' → ft_print_int
-                      ├─ 'u' → ft_print_uint
-                      ├─ 'x' → ft_print_hex(upper=0)
-                      ├─ 'X' → ft_print_hex(upper=1)
-                      └─ '%' → ft_print_percent
+    ├─ g_leftover に '\n' が含まれるまで read() を繰り返す
+    │     read(fd, buf, BUFFER_SIZE)
+    │     g_leftover = ft_strjoin(g_leftover, buf)   ← 結合して蓄積
+    │
+    ├─ g_leftover が空 / NULL → NULL を返す（読み込み終了）
+    │
+    ├─ extract_line(g_leftover)     → '\n' まで（含む）を切り出して返す
+    ├─ update_leftover(g_leftover)  → '\n' より後ろを次回用に保存
+    │
+    └─ free(古い g_leftover) して new_leftover に置き換える
 ```
 
-### 可変長引数（va_list）
+### static変数（g_leftover）
 
-`printf` は引数の数が実行時まで決まらないため、`<stdarg.h>` の仕組みを使います。
+`get_next_line` は呼ばれるたびに、前回の `read()` で読みすぎた分（次の行以降のデータ）を
+`g_leftover` という `static` 変数に保持し続けます。これにより、2回目以降の呼び出しでも
+「どこまで読んだか」を覚えておくことができます。
+
+### バッファサイズ（BUFFER_SIZE）
+
+`read()` は一度に `BUFFER_SIZE` バイトずつファイルから読み込みます。
+`BUFFER_SIZE` はコンパイル時に `-D BUFFER_SIZE=n` で指定でき、未指定の場合は
+`get_next_line.h` 内のデフォルト値（512）が使われます。
 
 ```c
-va_list ap;
-va_start(ap, format);   // format の次の引数からセット
-va_arg(ap, int);        // 引数を1つ取り出す（型を指定）
-va_end(ap);             // 解放
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 512
+# endif
 ```
 
-`va_arg` は呼ぶたびに「次の引数」を取り出します。型は呼び出し側が保証する必要があります。
+`buf` 配列は `BUFFER_SIZE + 1` で確保し、`read()` が `BUFFER_SIZE` バイトいっぱいに読み込んだ
+場合でも、末尾に `'\0'` を書き込めるようにしています（これを `BUFFER_SIZE` のままにすると
+配列外書き込みになり、`BUFFER_SIZE` が大きい値のときにクラッシュします）。
 
-### 基数変換（ft_putnbr_base）
+### 補助関数
 
-`%x`, `%X`, `%u` の出力に使う汎用的な基数変換関数です。
+| 関数 | 役割 |
+|------|------|
+| `ft_strchr_gnl` | 文字列中に `\n` があるか探す |
+| `ft_strjoin` | `leftover` と新しく読んだ `buf` を結合する |
+| `ft_strcount` | `\n` まで（含む）の長さを数える |
+| `extract_line` | `leftover` から `\n` まで（含む）を切り出して返す行にする |
+| `update_leftover` | `\n` より後ろの部分だけを次回用の `leftover` として残す |
+| `ft_strlen` | 文字列全体の長さを数える（`NULL` の場合は0を返す） |
 
-```c
-void ft_putnbr_base(unsigned int n, char *base)
-{
-    // base = "0123456789abcdef" なら16進、"0123456789" なら10進
-    if (n >= ft_strlen(base))
-        ft_putnbr_base(n / ft_strlen(base), base);
-    write(1, &base[n % ft_strlen(base)], 1);
-}
-```
+### ハマりやすいポイント
 
-再帰で上の桁から順に出力します。`unsigned int` を使うことで `%u` の最大値（4294967295）も正しく扱えます。
-
-### ポインタ出力（%p）
-
-ポインタは 64bit システムでは 8 バイトなので `unsigned long` で受け取ります。
-
-```c
-unsigned long addr = (unsigned long)va_arg(ap, void *);
-```
-
-- `addr == 0` のとき → `(nil)` を出力（Linux の printf に合わせる）
-- それ以外 → `"0x"` + 16進アドレスを出力
-
-`unsigned long` 用の再帰出力ヘルパー `ft_putptr_hex` を `static` 関数として `ft_print_ptr.c` 内に定義しています。
-
-### 戻り値（出力した文字数）
-
-各変換関数は出力した文字数を `int` で返します。`ft_printf` はそれを `count` に加算して最終的な出力文字数を返します。
+- `ft_strjoin` の初回呼び出しは `leftover == NULL`。このとき `ft_strlen(NULL)` が `0` を返すように
+  しておくことで、特別な分岐なしに `buf` の内容だけがコピーされるようにしている。
+- `BUFFER_SIZE`が大きい値（複数行を一度に読み込む場合）でも、`ft_strjoin`には文字列全体の長さ
+  （`ft_strlen`）を使う必要がある。`\n`までの長さしか数えない`ft_strcount`を使うと、
+  2行目以降のデータが結合時に欠落してしまう。
 
 ---
 
 ## Resources
 
-- [printf(3) — Linux man page](https://linux.die.net/man/3/printf)
-- [va_list / stdarg.h — cppreference](https://en.cppreference.com/w/c/variadic)
+- [get_next_line subject (42)](https://cdn.intra.42.fr/pdf/pdf/.../get_next_line.en.subject.pdf)
+- [read(2) — man page](https://man7.org/linux/man-pages/man2/read.2.html)
 - [42 Norm](https://cdn.intra.42.fr/pdf/pdf/960/norme.en.pdf)
-- [printfTester](https://github.com/Tripouille/printfTester)
+- [static variables in C — cppreference](https://en.cppreference.com/w/c/language/storage_duration)
 
 ### AI の使用について
 
-- **バグ診断**: 型ミス・未定義動作・未使用変数などのコンパイルエラーの原因特定
-- **README の作成支援**: 本ファイルの構成・記述
+- **ヘッダーファイルの整合性チェック**: `get_next_line.h` のプロトタイプ宣言と実装（`static`の有無）の
+  不一致、不要な `#include` の指摘
+- **コンパイルエラー・バグの原因調査**: `BUFFER_SIZE` マクロの二重定義、`buf[BUFFER_SIZE]` の
+  配列外書き込み（AddressSanitizerで検証）、`ft_strjoin` のNULL処理ミスなどの原因特定
+- **Norminetteエラーの修正方針の相談**: `TOO_MANY_LINES`、`GLOBAL_VAR_NAMING`、`TOO_MANY_FUNCS`
+  などの指摘に対する修正案の提示（最終的な修正は自分で実施）

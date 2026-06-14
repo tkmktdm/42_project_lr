@@ -6,36 +6,50 @@
 /*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/07 19:52:31 by hibitakumi        #+#    #+#             */
-/*   Updated: 2026/06/09 23:19:44 by htakumi          ###   ########.fr       */
+/*   Updated: 2026/06/14 15:42:33 by htakumi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <stdio.h>
-#define BUF_SIZE 512
 
-// fileが読まれると3が入る
+static char	*g_leftover = NULL;
+
+size_t	ft_strlen(const char *s)
+{
+	size_t	i;
+
+	if (!s)
+		return (0);
+	i = 0;
+	while (s[i] != '\0')
+		i++;
+	return (i);
+}
+
 char	*get_next_line(int fd)
 {
 	int		byte_num;
-	char	buf[BUF_SIZE];
-	int		i;
+	char	buf[BUFFER_SIZE + 1];
+	char	*line;
+	char	*new_g_leftover;
 
-	i = 0;
-	if (fd == -1)
+	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	// ファイルから5バイト読み込み
-	byte_num = read(fd, &buf[0], BUF_SIZE);
-	// printf("%d\n", byte_num);
-	if (byte_num == -1)
+	while (g_leftover == NULL || ft_strchr_gnl(g_leftover, '\n') == NULL)
 	{
-		fprintf(stdout, "ファイル読み込みエラー\n");
+		byte_num = read(fd, buf, BUFFER_SIZE);
+		if (byte_num == -1)
+			return (NULL);
+		if (byte_num == 0)
+			break ;
+		buf[byte_num] = '\0';
+		g_leftover = ft_strjoin(g_leftover, buf);
+	}
+	if (g_leftover == NULL || g_leftover[0] == '\0')
 		return (NULL);
-	}
-	while (buf[i])
-	{
-		write(1, &buf[i], 1);
-		i++;
-	}
-	return ("s");
+	line = extract_line(g_leftover);
+	new_g_leftover = update_leftover(g_leftover);
+	free(g_leftover);
+	g_leftover = new_g_leftover;
+	return (line);
 }

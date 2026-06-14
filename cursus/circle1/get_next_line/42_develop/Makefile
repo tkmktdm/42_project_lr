@@ -1,24 +1,21 @@
-NAME		= libftprintf.a
+NAME		= get_next_line.a
 
 CC			= cc
 CFLAGS		= -Wall -Wextra -Werror
 AR			= ar rcs
 RM			= rm -f
 
-LIBFT_DIR	= libft
-LIBFT		= $(LIBFT_DIR)/libft.a
-
-SRCS		= $(wildcard *.c)
+SRCS		= get_next_line.c get_next_line_utils.c
 OBJS		= $(SRCS:.c=.o)
-HEADERS		= ft_printf.h
+HEADERS		= get_next_line.h
+
+ifdef BUFFER_SIZE
+CFLAGS		+= -D BUFFER_SIZE=$(BUFFER_SIZE)
+endif
 
 all: $(NAME)
 
-$(LIBFT):
-	$(MAKE) -C $(LIBFT_DIR)
-
-$(NAME): $(LIBFT) $(OBJS)
-	cp $(LIBFT) $(NAME)
+$(NAME): $(OBJS)
 	$(AR) $(NAME) $(OBJS)
 
 %.o: %.c $(HEADERS)
@@ -26,11 +23,9 @@ $(NAME): $(LIBFT) $(OBJS)
 
 clean:
 	$(RM) $(OBJS)
-	$(MAKE) -C $(LIBFT_DIR) clean
 
 fclean: clean
 	$(RM) $(NAME)
-	$(MAKE) -C $(LIBFT_DIR) fclean
 
 re: fclean all
 

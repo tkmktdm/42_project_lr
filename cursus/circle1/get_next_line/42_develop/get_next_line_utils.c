@@ -6,7 +6,7 @@
 /*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/07 19:52:31 by hibitakumi        #+#    #+#             */
-/*   Updated: 2026/06/10 00:01:16 by htakumi          ###   ########.fr       */
+/*   Updated: 2026/06/14 15:42:39 by htakumi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ int	ft_strcount(const char *s)
 	return (i);
 }
 
-// 1. leftoverに\nがあるか探す
 char	*ft_strchr_gnl(char *s, int c)
 {
 	while (*s != '\0')
@@ -38,7 +37,6 @@ char	*ft_strchr_gnl(char *s, int c)
 	return (NULL);
 }
 
-// 2. leftoverから\nまでを切り出す（返す用）
 char	*extract_line(char *leftover)
 {
 	char	*line;
@@ -61,7 +59,6 @@ char	*extract_line(char *leftover)
 	return (line);
 }
 
-// 3. \nより後ろだけ残す（次回用）
 char	*update_leftover(char *leftover)
 {
 	char	*p;
@@ -85,4 +82,33 @@ char	*update_leftover(char *leftover)
 	}
 	right[i] = '\0';
 	return (right);
+}
+
+char	*ft_strjoin(char const *s1, char const *s2)
+{
+	size_t	l1;
+	size_t	l2;
+	size_t	i;
+	char	*r;
+
+	if (!s2)
+		return (NULL);
+	l1 = ft_strlen(s1);
+	l2 = ft_strlen(s2);
+	r = (char *)malloc(l1 + l2 + 1);
+	if (!r)
+		return (NULL);
+	i = 0;
+	while (i < l1)
+	{
+		r[i] = s1[i];
+		i++;
+	}
+	while (i < l1 + l2)
+	{
+		r[i] = s2[i - l1];
+		i++;
+	}
+	r[i] = '\0';
+	return (r);
 }
