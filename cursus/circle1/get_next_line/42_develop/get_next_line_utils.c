@@ -6,7 +6,7 @@
 /*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/07 19:52:31 by hibitakumi        #+#    #+#             */
-/*   Updated: 2026/06/14 15:42:39 by htakumi          ###   ########.fr       */
+/*   Updated: 2026/06/16 00:01:29 by htakumi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ char	*update_leftover(char *leftover)
 	if (p == NULL)
 		return (NULL);
 	p++;
-	len = ft_strcount(p);
+	len = ft_strlen(p);
 	right = malloc(sizeof(char) * (len + 1));
 	if (!right)
 		return (NULL);

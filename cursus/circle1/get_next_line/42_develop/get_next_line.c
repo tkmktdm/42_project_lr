@@ -6,13 +6,11 @@
 /*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/07 19:52:31 by hibitakumi        #+#    #+#             */
-/*   Updated: 2026/06/14 15:42:33 by htakumi          ###   ########.fr       */
+/*   Updated: 2026/06/16 00:02:14 by htakumi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-
-static char	*g_leftover = NULL;
 
 size_t	ft_strlen(const char *s)
 {
@@ -26,30 +24,54 @@ size_t	ft_strlen(const char *s)
 	return (i);
 }
 
-char	*get_next_line(int fd)
+static char	*fill_leftover(int fd, char *leftover)
 {
-	int		byte_num;
 	char	buf[BUFFER_SIZE + 1];
-	char	*line;
-	char	*new_g_leftover;
+	int		byte_num;
+	char	*tmp;
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
-		return (NULL);
-	while (g_leftover == NULL || ft_strchr_gnl(g_leftover, '\n') == NULL)
+	while (leftover == NULL || ft_strchr_gnl(leftover, '\n') == NULL)
 	{
 		byte_num = read(fd, buf, BUFFER_SIZE);
 		if (byte_num == -1)
+		{
+			free(leftover);
 			return (NULL);
+		}
 		if (byte_num == 0)
 			break ;
 		buf[byte_num] = '\0';
-		g_leftover = ft_strjoin(g_leftover, buf);
+		tmp = leftover;
+		leftover = ft_strjoin(leftover, buf);
+		free(tmp);
 	}
-	if (g_leftover == NULL || g_leftover[0] == '\0')
+	return (leftover);
+}
+
+char	*get_next_line(int fd)
+{
+	static char	*leftover = NULL;
+	char		*line;
+	char		*new_g_leftover;
+
+	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	line = extract_line(g_leftover);
-	new_g_leftover = update_leftover(g_leftover);
-	free(g_leftover);
-	g_leftover = new_g_leftover;
+	leftover = fill_leftover(fd, leftover);
+	if (leftover == NULL || leftover[0] == '\0')
+	{
+		free(leftover);
+		leftover = NULL;
+		return (NULL);
+	}
+	line = extract_line(leftover);
+	if (!line)
+	{
+		free(leftover);
+		leftover = NULL;
+		return (NULL);
+	}
+	new_g_leftover = update_leftover(leftover);
+	free(leftover);
+	leftover = new_g_leftover;
 	return (line);
 }
