@@ -72,6 +72,8 @@ char	*update_leftover(char *leftover)
 		return (NULL);
 	p++;
 	len = ft_strlen(p);
+	if (len == 0)
+		return (NULL);
 	right = malloc(sizeof(char) * (len + 1));
 	if (!right)
 		return (NULL);

@@ -26,24 +26,27 @@ size_t	ft_strlen(const char *s)
 
 static char	*fill_leftover(int fd, char *leftover)
 {
-	char	buf[BUFFER_SIZE + 1];
+	char	*buf;
 	int		byte_num;
 	char	*tmp;
 
-	while (leftover == NULL || ft_strchr_gnl(leftover, '\n') == NULL)
+	buf = malloc(sizeof(char) * (BUFFER_SIZE + 1));
+	byte_num = 0;
+	while (buf && (leftover == NULL || ft_strchr_gnl(leftover, '\n') == NULL))
 	{
 		byte_num = read(fd, buf, BUFFER_SIZE);
-		if (byte_num == -1)
-		{
-			free(leftover);
-			return (NULL);
-		}
-		if (byte_num == 0)
+		if (byte_num <= 0)
 			break ;
 		buf[byte_num] = '\0';
 		tmp = leftover;
 		leftover = ft_strjoin(leftover, buf);
 		free(tmp);
+	}
+	free(buf);
+	if (!buf || byte_num == -1)
+	{
+		free(leftover);
+		return (NULL);
 	}
 	return (leftover);
 }
