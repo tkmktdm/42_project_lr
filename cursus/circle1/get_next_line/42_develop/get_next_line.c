@@ -6,7 +6,7 @@
 /*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/07 19:52:31 by hibitakumi        #+#    #+#             */
-/*   Updated: 2026/06/16 00:02:14 by htakumi          ###   ########.fr       */
+/*   Updated: 2026/07/04 20:57:27 by htakumi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,27 @@ size_t	ft_strlen(const char *s)
 	return (i);
 }
 
+static char	*append_buf(char *left, size_t *left_len, char *buf, int bytes)
+{
+	char	*tmp;
+
+	tmp = left;
+	left = ft_strjoin_n(left, *left_len, buf, (size_t)bytes);
+	free(tmp);
+	if (left)
+		*left_len += (size_t)bytes;
+	else
+		*left_len = 0;
+	return (left);
+}
+
 static char	*fill_leftover(int fd, char *leftover)
 {
 	char	*buf;
 	int		byte_num;
-	char	*tmp;
+	size_t	left_len;
 
+	left_len = ft_strlen(leftover);
 	buf = malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	byte_num = 0;
 	while (buf && (leftover == NULL || ft_strchr_gnl(leftover, '\n') == NULL))
@@ -38,16 +53,15 @@ static char	*fill_leftover(int fd, char *leftover)
 		if (byte_num <= 0)
 			break ;
 		buf[byte_num] = '\0';
-		tmp = leftover;
-		leftover = ft_strjoin(leftover, buf);
-		free(tmp);
+		leftover = append_buf(leftover, &left_len, buf, byte_num);
 	}
-	free(buf);
-	if (!buf || byte_num == -1)
+	if (!buf || byte_num < 0)
 	{
+		free(buf);
 		free(leftover);
 		return (NULL);
 	}
+	free(buf);
 	return (leftover);
 }
 

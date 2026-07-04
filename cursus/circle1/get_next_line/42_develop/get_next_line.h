@@ -22,7 +22,7 @@ char	*get_next_line(int fd);
 char	*ft_strchr_gnl(char *s, int c);
 char	*extract_line(char *leftover);
 char	*update_leftover(char *leftover);
-char	*ft_strjoin(char const *s1, char const *s2);
+char	*ft_strjoin_n(char const *s1, size_t l1, char const *s2, size_t l2);
 size_t	ft_strlen(const char *s);
 
 # ifndef BUFFER_SIZE

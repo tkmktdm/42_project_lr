@@ -6,7 +6,7 @@
 /*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/07 19:52:31 by hibitakumi        #+#    #+#             */
-/*   Updated: 2026/06/16 00:01:29 by htakumi          ###   ########.fr       */
+/*   Updated: 2026/07/05 00:09:15 by htakumi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ char	*extract_line(char *leftover)
 	len = ft_strcount(leftover);
 	line = malloc(sizeof(char) * (len + 1));
 	if (!line)
-		return (0);
+		return (NULL);
 	while (leftover[i] != '\n' && leftover[i] != '\0')
 	{
 		line[i] = leftover[i];
@@ -86,17 +86,13 @@ char	*update_leftover(char *leftover)
 	return (right);
 }
 
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strjoin_n(char const *s1, size_t l1, char const *s2, size_t l2)
 {
-	size_t	l1;
-	size_t	l2;
-	size_t	i;
 	char	*r;
+	size_t	i;
 
 	if (!s2)
 		return (NULL);
-	l1 = ft_strlen(s1);
-	l2 = ft_strlen(s2);
 	r = (char *)malloc(l1 + l2 + 1);
 	if (!r)
 		return (NULL);
