@@ -6,7 +6,7 @@
 /*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/07 19:52:31 by hibitakumi        #+#    #+#             */
-/*   Updated: 2026/07/05 00:09:15 by htakumi          ###   ########.fr       */
+/*   Updated: 2026/07/06 14:25:39 by htakumi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,27 +86,30 @@ char	*update_leftover(char *leftover)
 	return (right);
 }
 
-char	*ft_strjoin_n(char const *s1, size_t l1, char const *s2, size_t l2)
+char	*grow_buf(char *left, char *buf, int bytes, t_leftover *info)
 {
-	char	*r;
 	size_t	i;
+	size_t	new_capacity;
+	char	*new_left;
 
-	if (!s2)
-		return (NULL);
-	r = (char *)malloc(l1 + l2 + 1);
-	if (!r)
-		return (NULL);
-	i = 0;
-	while (i < l1)
+	new_capacity = (info->len + (size_t)bytes) * 2;
+	new_left = malloc(new_capacity);
+	if (!new_left)
 	{
-		r[i] = s1[i];
-		i++;
+		free(left);
+		info->len = 0;
+		info->capacity = 0;
+		return (NULL);
 	}
-	while (i < l1 + l2)
-	{
-		r[i] = s2[i - l1];
-		i++;
-	}
-	r[i] = '\0';
-	return (r);
+	i = -1;
+	while (++i != info->len)
+		new_left[i] = left[i];
+	free(left);
+	i = -1;
+	while (++i != (size_t)bytes)
+		new_left[info->len + i] = buf[i];
+	new_left[info->len + i] = '\0';
+	info->len += (size_t)bytes;
+	info->capacity = new_capacity;
+	return (new_left);
 }

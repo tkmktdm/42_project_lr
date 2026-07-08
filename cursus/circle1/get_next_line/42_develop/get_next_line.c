@@ -6,7 +6,7 @@
 /*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/07 19:52:31 by hibitakumi        #+#    #+#             */
-/*   Updated: 2026/07/04 20:57:27 by htakumi          ###   ########.fr       */
+/*   Updated: 2026/07/06 00:41:17 by htakumi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,27 +24,33 @@ size_t	ft_strlen(const char *s)
 	return (i);
 }
 
-static char	*append_buf(char *left, size_t *left_len, char *buf, int bytes)
+static char	*append_buf(char *left, char *buf, int bytes, t_leftover *info)
 {
-	char	*tmp;
+	size_t	i;
+	size_t	check_len;
 
-	tmp = left;
-	left = ft_strjoin_n(left, *left_len, buf, (size_t)bytes);
-	free(tmp);
-	if (left)
-		*left_len += (size_t)bytes;
+	check_len = info->len + (size_t)bytes;
+	if (check_len >= info->capacity)
+		left = grow_buf(left, buf, (size_t)bytes, info);
 	else
-		*left_len = 0;
+	{
+		i = -1;
+		while (++i != (size_t)bytes)
+			left[info->len + i] = buf[i];
+		left[info->len + i] = '\0';
+		info->len += i;
+	}
 	return (left);
 }
 
 static char	*fill_leftover(int fd, char *leftover)
 {
-	char	*buf;
-	int		byte_num;
-	size_t	left_len;
+	char		*buf;
+	int			byte_num;
+	t_leftover	info;
 
-	left_len = ft_strlen(leftover);
+	info.len = ft_strlen(leftover);
+	info.capacity = ft_strlen(leftover) + 1;
 	buf = malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	byte_num = 0;
 	while (buf && (leftover == NULL || ft_strchr_gnl(leftover, '\n') == NULL))
@@ -53,7 +59,7 @@ static char	*fill_leftover(int fd, char *leftover)
 		if (byte_num <= 0)
 			break ;
 		buf[byte_num] = '\0';
-		leftover = append_buf(leftover, &left_len, buf, byte_num);
+		leftover = append_buf(leftover, buf, byte_num, &info);
 	}
 	if (!buf || byte_num < 0)
 	{
