@@ -6,14 +6,13 @@
 /*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/26 16:17:10 by htakumi           #+#    #+#             */
-/*   Updated: 2026/07/06 00:42:39 by htakumi          ###   ########.fr       */
+/*   Updated: 2026/07/08 20:07:54 by htakumi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
 
-# include <stdarg.h>
 # include <stdlib.h>
 # include <unistd.h>
 
