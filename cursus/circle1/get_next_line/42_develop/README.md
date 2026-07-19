@@ -27,28 +27,16 @@
 
 ### ビルド
 
-```bash
-# get_next_line.a をビルド（BUFFER_SIZEはデフォルト512）
-make
-
-# BUFFER_SIZEを指定してビルド
-make re BUFFER_SIZE=42
-
-# オブジェクトファイルを削除
-make clean
-
-# オブジェクトファイルと get_next_line.a を削除
-make fclean
-
-# 再ビルド
-make re
-```
-
-### 動作確認（直接コンパイルする場合）
-
-評価時は以下のように直接コンパイルされる想定です（`-D BUFFER_SIZE` の有無どちらでも動作します）。
+このプロジェクトに Makefile はありません。課題の指示どおり、`get_next_line.c` /
+`get_next_line_utils.c` を利用側のファイルと一緒に直接 `cc` でコンパイルします。
+`-D BUFFER_SIZE` の有無どちらでも動作する必要があるため、両方のパターンで
+コンパイルできることを確認してください。
 
 ```bash
+# -D BUFFER_SIZE なし（get_next_line.h内のデフォルト値 512 を使用）
+cc -Wall -Wextra -Werror get_next_line.c get_next_line_utils.c main.c -o test
+
+# -D BUFFER_SIZE あり（例: 42）
 cc -Wall -Wextra -Werror -D BUFFER_SIZE=42 get_next_line.c get_next_line_utils.c main.c -o test
 ```
 

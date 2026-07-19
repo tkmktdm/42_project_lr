@@ -20,7 +20,10 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJ_DIR="$(cd "$SCRIPT_DIR/../42_develop" && pwd)"
 WORK_DIR="$(mktemp -d /tmp/gnl_test.XXXXXX)"
 BONUS="${BONUS:-0}"
-BUFFER_SIZES="${BUFFER_SIZES:-1 5 42 9999 10000000}"
+# 1,5,7   = Small BUFFER_SIZE (< 8, 1を含む)
+# 42      = 通常サイズ
+# 1024,2048,9999,10000000 = Large BUFFER_SIZE (> 1024)
+BUFFER_SIZES="${BUFFER_SIZES:-1 5 7 42 1024 2048 9999 10000000}"
 
 trap 'rm -rf "$WORK_DIR"' EXIT
 
@@ -119,7 +122,34 @@ while [ "$i" -le 2000 ]; do
 	i=$((i + 1))
 done >"$FIXTURES_DIR/test8_big.txt"
 
-FIXTURE_FILES="test1_normal.txt test2_no_newline_at_end.txt test3_empty_lines.txt test4_single_line.txt test5_empty.txt test6_long_lines.txt test7_only_newlines.txt test8_big.txt"
+# test9: 単一の長い行 (2000文字超, 改行あり) — BUFFER_SIZE境界値テストにも使う
+SINGLE_LONG_LINE_FILE="$FIXTURES_DIR/test9_single_long_line.txt"
+awk 'BEGIN{s=""; for(i=0;i<2048;i++) s=s "A"; print s}' >"$SINGLE_LONG_LINE_FILE"
+
+# test10: 複数の長い行 (それぞれ2000文字超)
+MULTI_LONG_LINES_FILE="$FIXTURES_DIR/test10_multi_long_lines.txt"
+: >"$MULTI_LONG_LINES_FILE"
+for c in A B C; do
+	awk -v ch="$c" 'BEGIN{s=""; for(i=0;i<2200;i++) s=s ch; print s}' >>"$MULTI_LONG_LINES_FILE"
+done
+
+# test11: 単一の短い行 (4文字未満、1文字含む)
+SINGLE_SHORT_LINE_FILE="$FIXTURES_DIR/test11_single_short_line.txt"
+printf "a\n" >"$SINGLE_SHORT_LINE_FILE"
+
+# test12: 複数の短い行 (それぞれ4文字未満)
+MULTI_SHORT_LINES_FILE="$FIXTURES_DIR/test12_multi_short_lines.txt"
+printf "a\nbc\n1\n\nz\n" >"$MULTI_SHORT_LINES_FILE"
+
+# test13: 単一の空行のみ
+SINGLE_EMPTY_LINE_FILE="$FIXTURES_DIR/test13_single_empty_line.txt"
+printf "\n" >"$SINGLE_EMPTY_LINE_FILE"
+
+# test14: 複数の空行のみ (test7_only_newlinesと重複するが名称を明確化)
+MULTI_EMPTY_LINES_FILE="$FIXTURES_DIR/test14_multi_empty_lines.txt"
+printf "\n\n\n\n\n" >"$MULTI_EMPTY_LINES_FILE"
+
+FIXTURE_FILES="test1_normal.txt test2_no_newline_at_end.txt test3_empty_lines.txt test4_single_line.txt test5_empty.txt test6_long_lines.txt test7_only_newlines.txt test8_big.txt test9_single_long_line.txt test10_multi_long_lines.txt test11_single_short_line.txt test12_multi_short_lines.txt test13_single_empty_line.txt test14_multi_empty_lines.txt"
 
 # ===== カスタマイズここから (drivers) =====
 
@@ -403,6 +433,28 @@ test_stdin() {
 	fi
 }
 
+test_buffer_size_line_boundary() {
+	# 単一長行(test9)の長さ(改行込み)を基準に、
+	# BUFFER_SIZE = 行長-1 / 行長 / 行長+1 の3パターンをテストする
+	local len
+	len=$(wc -c <"$SINGLE_LONG_LINE_FILE" | tr -d ' ')
+	local bs
+	for bs in $((len - 1)) "$len" $((len + 1)); do
+		local bin="$WORK_DIR/boundary_bs$bs"
+		if ! compile_test "$WORK_DIR/driver_cat.c" "$bin" "$bs"; then
+			fail "BUFFER_SIZE=$bs (行長=$len との差分境界): コンパイル失敗"
+			continue
+		fi
+		local out="$WORK_DIR/boundary_out_bs$bs"
+		"$bin" "$SINGLE_LONG_LINE_FILE" >"$out" 2>"$WORK_DIR/run.log"
+		if diff -q "$SINGLE_LONG_LINE_FILE" "$out" >/dev/null 2>&1; then
+			pass "BUFFER_SIZE=$bs (行長=$len との差分境界): 正しく読めた"
+		else
+			fail "BUFFER_SIZE=$bs (行長=$len との差分境界): 出力が一致しない"
+		fi
+	done
+}
+
 test_one_line_per_call() {
 	local bs="$1"
 	local bin="$WORK_DIR/one_call_bs$bs"
@@ -546,6 +598,9 @@ for bs in $BUFFER_SIZES; do
 	test_stdin "$bs"
 	test_one_line_per_call "$bs"
 done
+
+section "必須パート: BUFFER_SIZEが行長ちょうど / ±1バイトの境界値"
+test_buffer_size_line_boundary
 
 section "必須パート: 特殊なfd"
 test_invalid_fd
