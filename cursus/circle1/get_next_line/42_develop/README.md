@@ -133,15 +133,34 @@ typedef struct s_leftover
 
 ### 補助関数
 
-| 関数                | 役割                                                                   |
-| ------------------- | ---------------------------------------------------------------------- |
-| `ft_strchr_gnl`   | 文字列中に `\n` があるか探す                                         |
-| `append_buf`      | `leftover` に新しく読んだ `buf` を追記する（容量が足りるかで分岐） |
-| `grow_buf`        | `leftover` の箱が足りないとき、大きい箱を新しく確保して中身を移す    |
-| `ft_strcount`     | `\n` まで（含む）の長さを数える                                      |
-| `extract_line`    | `leftover` から `\n` まで（含む）を切り出して返す行にする          |
-| `update_leftover` | `\n` より後ろの部分だけを次回用の `leftover` として残す            |
-| `ft_strlen`       | 文字列全体の長さを数える（`NULL` の場合は0を返す）                   |
+| 関数                | 役割                                                                   | 定義場所 |
+| ------------------- | ---------------------------------------------------------------------- | -------- |
+| `ft_strchr_gnl`   | 文字列中に `\n` があるか探す（`\n`の位置ポインタ、なければ`NULL`）  | get_next_line.c |
+| `fill_leftover`   | `\n`が見つかるまで`read()`を繰り返し、`leftover`に追記していく       | get_next_line_utils.c |
+| `append_buf`      | `leftover` に新しく読んだ `buf` を追記する（容量が足りるかで分岐） | get_next_line_utils.c |
+| `grow_buf`        | `leftover` の箱が足りないとき、大きい箱を新しく確保して中身を移す    | get_next_line_utils.c |
+| `extract_line`    | `leftover` から `\n` まで（含む）を切り出して返す行にする          | get_next_line_utils.c |
+| `update_leftover` | `\n` より後ろの部分だけを次回用の `leftover` として残す            | get_next_line_utils.c |
+
+### ファイル構成について（なぜ ft_strchr_gnl だけ get_next_line.c にあるか）
+
+課題PDFは「ヘルパー関数は全部 `get_next_line_utils.c` に書くこと」と指示していますが、
+42 Normには **1ファイルにつき関数は最大5個まで** という制限があります。
+このプロジェクトはヘルパー関数だけで6個（`ft_strchr_gnl`, `fill_leftover`, `append_buf`,
+`grow_buf`, `extract_line`, `update_leftover`）あり、全部を `get_next_line_utils.c`
+1ファイルに詰めると6個になり Norm違反になってしまいます。
+
+`ft_strchr_gnl` を `fill_leftover` の中に直接書き込んで関数自体をなくす案も検討しましたが、
+`\n` が見つかるまで読み続けるループの条件式の中でしか使われないため、無理に埋め込むと
+①`malloc`回数を抑えるための容量倍々管理のロジックが壊れる、②1関数25行というNorm制限を
+超える、のどちらかになってしまうと分かりました。そのため `ft_strchr_gnl` だけを
+`get_next_line.c` 側に残し、`get_next_line_utils.c` を残り5関数ちょうど（Norm上限）に
+収める構成にしています。
+
+もともとあった `ft_strcount`（`\n`まで数える）と `ft_strlen`（文字列全体を数える）は、
+どちらも1回きりの単純なループだったため、専用の関数として切り出さず呼び出し側
+（`extract_line` / `fill_leftover` / `update_leftover`）にそのまま書き込んで関数の数を
+減らしました。ロジック自体は変えていません。
 
 ### ハマりやすいポイント
 
