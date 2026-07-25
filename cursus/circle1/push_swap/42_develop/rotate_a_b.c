@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   rotate_a_b.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: htakumi <htakumi@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*   By: hibitakumi <hibitakumi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/25 01:53:00 by tfujikaw          #+#    #+#             */
-/*   Updated: 2026/07/19 12:37:26 by htakumi          ###   ########.fr       */
+/*   Updated: 2026/07/25 17:30:33 by hibitakumi       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,9 @@ static int	rotate_a_b(t_swap **stack)
 	t_swap	*first;
 	t_swap	*last;
 
-	first = *stack;
 	if (!stack || !*stack || (*stack)->next == NULL)
 		return (0);
+	first = *stack;
 	last = *stack;
 	while (last->next)
 		last = last->next;
