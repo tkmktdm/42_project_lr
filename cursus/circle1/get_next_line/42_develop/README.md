@@ -44,6 +44,8 @@ cc -Wall -Wextra -Werror -D BUFFER_SIZE=42 get_next_line.c get_next_line_utils.c
 
 ```c
 #include "get_next_line.h"
+#include <stdio.h>
+#include <sys/fcntl.h> // open
 
 int main(void)
 {
@@ -133,14 +135,14 @@ typedef struct s_leftover
 
 ### 補助関数
 
-| 関数                | 役割                                                                   | 定義場所 |
-| ------------------- | ---------------------------------------------------------------------- | -------- |
-| `ft_strchr_gnl`   | 文字列中に `\n` があるか探す（`\n`の位置ポインタ、なければ`NULL`）  | get_next_line.c |
-| `fill_leftover`   | `\n`が見つかるまで`read()`を繰り返し、`leftover`に追記していく       | get_next_line_utils.c |
-| `append_buf`      | `leftover` に新しく読んだ `buf` を追記する（容量が足りるかで分岐） | get_next_line_utils.c |
-| `grow_buf`        | `leftover` の箱が足りないとき、大きい箱を新しく確保して中身を移す    | get_next_line_utils.c |
-| `extract_line`    | `leftover` から `\n` まで（含む）を切り出して返す行にする          | get_next_line_utils.c |
-| `update_leftover` | `\n` より後ろの部分だけを次回用の `leftover` として残す            | get_next_line_utils.c |
+| 関数                | 役割                                                                      | 定義場所              |
+| ------------------- | ------------------------------------------------------------------------- | --------------------- |
+| `ft_strchr_gnl`   | 文字列中に `\n` があるか探す（`\n`の位置ポインタ、なければ `NULL`） | get_next_line.c       |
+| `fill_leftover`   | `\n`が見つかるまで `read()`を繰り返し、`leftover`に追記していく     | get_next_line_utils.c |
+| `append_buf`      | `leftover` に新しく読んだ `buf` を追記する（容量が足りるかで分岐）    | get_next_line_utils.c |
+| `grow_buf`        | `leftover` の箱が足りないとき、大きい箱を新しく確保して中身を移す       | get_next_line_utils.c |
+| `extract_line`    | `leftover` から `\n` まで（含む）を切り出して返す行にする             | get_next_line_utils.c |
+| `update_leftover` | `\n` より後ろの部分だけを次回用の `leftover` として残す               | get_next_line_utils.c |
 
 ### ファイル構成について（なぜ ft_strchr_gnl だけ get_next_line.c にあるか）
 
