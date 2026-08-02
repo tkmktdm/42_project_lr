@@ -33,4 +33,8 @@ char		*update_leftover(char *leftover);
 #  define BUFFER_SIZE 512
 # endif
 
+# ifndef GNL_NL
+#  define GNL_NL '\n'
+# endif
+
 #endif

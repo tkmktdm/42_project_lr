@@ -71,7 +71,7 @@ char	*fill_leftover(int fd, char *leftover)
 	info.capacity = info.len + 1;
 	buf = malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	byte_num = 0;
-	while (buf && (leftover == NULL || ft_strchr_gnl(leftover, '\n') == NULL))
+	while (buf && (leftover == NULL || ft_strchr_gnl(leftover, GNL_NL) == NULL))
 	{
 		byte_num = read(fd, buf, BUFFER_SIZE);
 		if (byte_num <= 0)
@@ -95,21 +95,21 @@ char	*extract_line(char *leftover)
 	int		len;
 
 	len = 0;
-	while (leftover[len] != '\0' && leftover[len] != '\n')
+	while (leftover[len] != '\0' && leftover[len] != GNL_NL)
 		len++;
-	if (leftover[len] == '\n')
+	if (leftover[len] == GNL_NL)
 		len++;
 	line = malloc(sizeof(char) * (len + 1));
 	if (!line)
 		return (NULL);
 	i = 0;
-	while (leftover[i] != '\n' && leftover[i] != '\0')
+	while (leftover[i] != GNL_NL && leftover[i] != '\0')
 	{
 		line[i] = leftover[i];
 		i++;
 	}
 	line[i] = leftover[i];
-	if (leftover[i] == '\n')
+	if (leftover[i] == GNL_NL)
 		line[i + 1] = '\0';
 	return (line);
 }
@@ -121,7 +121,7 @@ char	*update_leftover(char *leftover)
 	int		len;
 	int		i;
 
-	p = ft_strchr_gnl(leftover, '\n');
+	p = ft_strchr_gnl(leftover, GNL_NL);
 	if (p == NULL)
 		return (NULL);
 	p++;
