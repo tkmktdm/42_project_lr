@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "push_swap.h"
-#include <unistd.h>
 
 static int	rotate_a_b(t_swap **stack)
 {
@@ -35,21 +34,13 @@ static int	rotate_a_b(t_swap **stack)
 void	rotate_ra(t_swap **stack_a, t_bench *bench)
 {
 	if (rotate_a_b(stack_a) == 1)
-	{
-		write(1, "ra\n", 3);
-		bench->ra++;
-		bench->total++;
-	}
+		report_op("ra\n", 3, &bench->ra, bench);
 }
 
 void	rotate_rb(t_swap **stack_b, t_bench *bench)
 {
 	if (rotate_a_b(stack_b) == 1)
-	{
-		write(1, "rb\n", 3);
-		bench->rb++;
-		bench->total++;
-	}
+		report_op("rb\n", 3, &bench->rb, bench);
 }
 
 void	rotate_rr(t_swap **stack_a, t_swap **stack_b, t_bench *bench)
@@ -60,9 +51,5 @@ void	rotate_rr(t_swap **stack_a, t_swap **stack_b, t_bench *bench)
 	check_a = rotate_a_b(stack_a);
 	check_b = rotate_a_b(stack_b);
 	if (check_a == 1 || check_b == 1)
-	{
-		write(1, "rr\n", 3);
-		bench->rr++;
-		bench->total++;
-	}
+		report_op("rr\n", 3, &bench->rr, bench);
 }

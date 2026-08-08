@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "push_swap.h"
-#include <unistd.h>
 
 static int	push_a_b(t_swap **before, t_swap **after)
 {
@@ -33,28 +32,14 @@ static int	push_a_b(t_swap **before, t_swap **after)
 
 void	push_pa(t_swap **stack_a, t_swap **stack_b, t_bench *bench)
 {
-	int	check;
-
-	check = push_a_b(stack_b, stack_a);
-	if (check == 1)
-	{
-		write(1, "pa\n", 3);
-		bench->pa++;
-		bench->total++;
-	}
+	if (push_a_b(stack_b, stack_a) == 1)
+		report_op("pa\n", 3, &bench->pa, bench);
 	return ;
 }
 
 void	push_pb(t_swap **stack_a, t_swap **stack_b, t_bench *bench)
 {
-	int	check;
-
-	check = push_a_b(stack_a, stack_b);
-	if (check == 1)
-	{
-		write(1, "pb\n", 3);
-		bench->pb++;
-		bench->total++;
-	}
+	if (push_a_b(stack_a, stack_b) == 1)
+		report_op("pb\n", 3, &bench->pb, bench);
 	return ;
 }

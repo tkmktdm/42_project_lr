@@ -58,6 +58,8 @@ typedef struct s_ctx
 	double			disorder;
 }					t_ctx;
 
+void				report_op(char *label, int len, int *counter,
+						t_bench *bench);
 void				swap_sa(t_swap *node, t_bench *bench);
 void				swap_sb(t_swap *node, t_bench *bench);
 void				swap_ss(t_swap *node_a, t_swap *node_b, t_bench *bench);

@@ -12,6 +12,14 @@
 
 #include "./libft/libft.h"
 #include "push_swap.h"
+#include <unistd.h>
+
+void	report_op(char *label, int len, int *counter, t_bench *bench)
+{
+	write(1, label, len);
+	(*counter)++;
+	bench->total++;
+}
 
 static void	print_label_num(char *label, int val)
 {
