@@ -734,6 +734,75 @@ valgrind --leak-check=full ./push_swap 5 3 9 1 7 2 > /dev/null
 
 ---
 
+## 13. ライブコーディング想定問題
+
+42のライブコーディング試験で聞かれそうな「機能追加」系の問題と、このコードベースに対する解答例を記録しておきます。ここも提出物には含めない自分用の練習ノートです。
+
+### お題: quiet モード — 操作列を出さず、合計命令数だけ出力する
+
+**要件**: 通常は `sa` `pb` … を1行ずつ標準出力するが、quiet モードでは個々の命令名を出さず、合計命令数だけを1行出力する。
+
+**解答**
+
+1. `t_bench` にフラグを1つ追加する
+
+```c
+/* push_swap.h */
+typedef struct s_bench
+{
+    ...
+    int    quiet;   // 1 なら操作列を出力しない
+}    t_bench;
+```
+
+2. `report_op` の出力部分だけ条件分岐で止める（カウントは今まで通り行う）
+
+```c
+/* bench_print.c */
+void    report_op(char *label, int len, int *counter, t_bench *bench)
+{
+    if (!bench->quiet)
+        write(1, label, len);
+    (*counter)++;
+    bench->total++;
+}
+```
+
+3. `main.c` の `run_algorithm` の後に合計だけ出す
+
+```c
+if (ctx.bench.quiet == 1)
+{
+    ft_putnbr_fd(ctx.bench.total, 1);
+    write(1, "\n", 1);
+}
+```
+
+**なぜこの3箇所だけで済むか**
+
+- 11命令はすべて `report_op` を経由して出力している（§5参照）ので、出力を止める変更点はここ1箇所だけで全命令に効く。
+- `bench->total` は `--bench` の有無に関わらず常にカウントされているので、quiet モードでも合計はすでに正しく積み上がっている。数え直す処理は不要。
+- `ft_bzero(&ctx, sizeof(t_ctx))` により `quiet` はデフォルト0なので、既存の動作（1行ずつ出力する通常モード）は変更されない。
+
+**この解答だけでは足りない点**
+
+上のコードだけでは `bench.quiet` を1にする手段がありません。実際の試験では「`--quiet` オプションを追加せよ」まで含めて要求される可能性が高いです。追加するなら:
+
+```c
+/* args_parse.c: select_option に1行追加 */
+if (ft_strcmp(av, "--quiet") == 0)
+    return (6);
+```
+
+現在の `parse_options(char **av, int *op, int *bench_flag)` は `t_ctx` 全体ではなく個別のポインタしか受け取っていないため、そのままでは新しい `type == 6` を `bench.quiet` に書き込めません。素直に直すなら
+
+- 第4引数に `int *quiet` を追加して呼び出し側 (`main.c`) で `ctx->bench.quiet` に渡す、または
+- `parse_options` の戻り値（数値列の開始位置）を使って `main.c` 側で `av` をもう一度舐めて `--quiet` の有無を判定する
+
+のどちらかになります。試験本番では、この「`parse_options` が `t_ctx` を直接触れない設計になっている」という制約に自分で気づけるかがポイントです。
+
+---
+
 ## 付録: 用語ミニ辞典
 
 | 用語 | 意味 |
