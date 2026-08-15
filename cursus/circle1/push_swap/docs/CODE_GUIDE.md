@@ -19,26 +19,26 @@
 
 ## 1. ファイルマップ（どこに何があるか）
 
-| 層 | ファイル | 中身 |
-| --- | --- | --- |
-| **入口** | `main.c` | 全体の流れ。`setup_stack` → `run_algorithm` → `print_all_bench` → 解放 |
-| **入力処理** | `args_parse.c` | 引数連結 / オプション判定 / 数値バリデーション |
-| | `check_duplicate.c` | 重複と不正値のチェック |
-| | `stack_utils.c` | 文字列 → 連結リスト生成、リスト解放 |
-| **11命令** | `swap_a_b.c` | `sa` `sb` `ss` |
-| | `push_a_b.c` | `pa` `pb` |
-| | `rotate_a_b.c` | `ra` `rb` `rr` |
-| | `rev_rotate_a_b.c` | `rra` `rrb` `rrr` |
-| **アルゴリズム** | `simple_algorithm.c` | 選択ソート系 O(n²) |
-| | `medium_algorithm.c` | チャンク分割 O(n√n) + `chunk_rank` / `pull_from_b` |
-| | `chunk_utils.c` | `bring_chunk`（medium の中核） |
-| | `complex_algorithm.c` | 基数ソート O(n log n) + `is_sorted` |
-| | `ft_adaptive.c` | disorder による戦略の振り分け |
-| **計測・補助** | `ft_disoder.c` | 転倒数による disorder 計算（マージソート応用） |
-| | `bench_print.c` | `--bench` の出力 |
-| | `stack_size.c` | リストの長さ |
-| | `ft_strcmp.c` | オプション文字列比較（libft に無いので自作） |
-| **ヘッダ** | `push_swap.h` | 構造体3つ + 全プロトタイプ |
+| 層                     | ファイル                | 中身                                                                            |
+| ---------------------- | ----------------------- | ------------------------------------------------------------------------------- |
+| **入口**         | `main.c`              | 全体の流れ。`setup_stack` → `run_algorithm` → `print_all_bench` → 解放 |
+| **入力処理**     | `args_parse.c`        | 引数連結 / オプション判定 / 数値バリデーション                                  |
+|                        | `check_duplicate.c`   | 重複と不正値のチェック                                                          |
+|                        | `stack_utils.c`       | 文字列 → 連結リスト生成、リスト解放                                            |
+| **11命令**       | `swap_a_b.c`          | `sa` `sb` `ss`                                                            |
+|                        | `push_a_b.c`          | `pa` `pb`                                                                   |
+|                        | `rotate_a_b.c`        | `ra` `rb` `rr`                                                            |
+|                        | `rev_rotate_a_b.c`    | `rra` `rrb` `rrr`                                                         |
+| **アルゴリズム** | `simple_algorithm.c`  | 選択ソート系 O(n²)                                                             |
+|                        | `medium_algorithm.c`  | チャンク分割 O(n√n) +`chunk_rank` / `pull_from_b`                          |
+|                        | `chunk_utils.c`       | `bring_chunk`（medium の中核）                                                |
+|                        | `complex_algorithm.c` | 基数ソート O(n log n) +`is_sorted`                                            |
+|                        | `ft_adaptive.c`       | disorder による戦略の振り分け                                                   |
+| **計測・補助**   | `ft_disoder.c`        | 転倒数による disorder 計算（マージソート応用）                                  |
+|                        | `bench_print.c`       | `--bench` の出力                                                              |
+|                        | `stack_size.c`        | リストの長さ                                                                    |
+|                        | `ft_strcmp.c`         | オプション文字列比較（libft に無いので自作）                                    |
+| **ヘッダ**       | `push_swap.h`         | 構造体3つ + 全プロトタイプ                                                      |
 
 `libft/` は 42 の既存ライブラリ。ここで実際に使っているのは
 `ft_split` / `ft_atoi` / `ft_strlen` / `ft_strlcat` / `ft_bzero` / `ft_putstr_fd` / `ft_putnbr_fd` くらいです。
@@ -188,9 +188,11 @@ if ((!neg && value > 2147483647) || (neg && value > 2147483648)) return (0);
 
 > ⚠️ **既知の穴**: `value` は `long` ですが、桁数チェックを**ループの後**でしかしていません。
 > 20桁以上を渡すと `long` 自体がオーバーフローし（C では未定義動作）、範囲チェックをすり抜けます。
+>
 > ```sh
 > $ ./push_swap 18446744073709551616 1 2   # Error が出ずに素通りする
 > ```
+>
 > 直すなら、ループ内で `if (value > 2147483648) return (0);` を毎桁チェックします。
 > （42 のテスターはここまで見ないことが多いですが、聞かれたら説明できるようにしておくと安全です）
 
@@ -242,11 +244,11 @@ void    push_pb(t_swap **a, t_swap **b, t_bench *bench)
 
 ### 各操作の中身
 
-| 関数 | やっていること |
-| --- | --- |
-| `swap_a_b` | ノードは動かさず、**`num` の値だけ交換**する |
-| `push_a_b` | `before` の先頭ノードを切り離し、`after` の先頭に付け替える |
-| `rotate_a_b` | 先頭を末尾へ。末尾は `while (last->next)` で毎回探索（O(n)） |
+| 関数           | やっていること                                                         |
+| -------------- | ---------------------------------------------------------------------- |
+| `swap_a_b`   | ノードは動かさず、**`num` の値だけ交換**する                   |
+| `push_a_b`   | `before` の先頭ノードを切り離し、`after` の先頭に付け替える        |
+| `rotate_a_b` | 先頭を末尾へ。末尾は `while (last->next)` で毎回探索（O(n)）         |
 | `rev_rotate` | 末尾を先頭へ。`last->pre->next = NULL` で切り離すので `pre` が必須 |
 
 > ⚠️ **`swap_a_b` の落とし穴**: 交換しているのは `num` だけで、**`rank` は交換していません**。
@@ -272,6 +274,7 @@ void    push_pb(t_swap **a, t_swap **b, t_bench *bench)
 ```
 
 **sa（swap a）— 上位2つを交換**
+
 ```
 前: 2 4 5 1 3        後: 4 2 5 1 3
      ~~~                  ~~~
@@ -279,6 +282,7 @@ void    push_pb(t_swap **a, t_swap **b, t_bench *bench)
 ```
 
 **pb（push b）— aの top を b の top へ**
+
 ```
 前: a: 2 4 5 1 3   b: (空)
 後: a: 4 5 1 3      b: 2
@@ -286,12 +290,14 @@ void    push_pb(t_swap **a, t_swap **b, t_bench *bench)
 ```
 
 **pa（push a）— bの top を a の top へ**（pbの逆方向）
+
 ```
 前: a: 4 5 1 3      b: 2
 後: a: 2 4 5 1 3    b: (空)
 ```
 
 **ra（rotate a）— 先頭が最後尾に回る（上へシフト）**
+
 ```
 前: 2 4 5 1 3
 後: 4 5 1 3 2
@@ -299,6 +305,7 @@ void    push_pb(t_swap **a, t_swap **b, t_bench *bench)
 ```
 
 **rra（reverse rotate a）— 最後尾が先頭に回る（下へシフト）**
+
 ```
 前: 2 4 5 1 3
 後: 3 2 4 5 1
@@ -307,7 +314,7 @@ void    push_pb(t_swap **a, t_swap **b, t_bench *bench)
 
 **rr / rrr** — `ra`+`rb` / `rra`+`rrb` を同時に実行。a・bの回転が両方成功したときのみ1回とカウントする（`rotate_a_b.c` の `check_a == 1 || check_b == 1`）。
 
-図からわかる通り、`ra`と`rra`は逆演算、`pa`と`pb`も逆演算です。アルゴリズムは基本的に
+図からわかる通り、`ra`と `rra`は逆演算、`pa`と `pb`も逆演算です。アルゴリズムは基本的に
 「`pb`でbに逃がす → `ra`/`rra`で欲しい要素をtopへ寄せる → `pa`でaに戻す」の組み合わせだけで構成されています。
 
 ---
@@ -396,22 +403,22 @@ b は既に大まかに降順なので最大 rank はたいてい先頭付近に
 
 **手で追う例**: `./push_swap --medium 2 4 5 1 3`
 
-| 状態 | a (rank) | b (rank) | 次の操作 |
-| --- | --- | --- | --- |
-| 初期 | 2(1) 4(3) 5(4) 1(0) 3(2) | — | chunk_size=2, チャンク [0,2) |
-| | 4(3) 5(4) 1(0) 3(2) | 2(1) | `pb` |
-| | 5(4) 1(0) 3(2) 4(3) | 2(1) | `ra` |
-| | 1(0) 3(2) 4(3) 5(4) | 2(1) | `ra` |
-| | 3(2) 4(3) 5(4) | 1(0) 2(1) | `pb` → チャンク [2,4) へ |
-| | 4(3) 5(4) | 3(2) 1(0) 2(1) | `pb` |
-| | 5(4) | 4(3) 3(2) 1(0) 2(1) | `pb` → チャンク [4,6) へ |
-| | — | 5(4) 4(3) 3(2) 1(0) 2(1) | `pb`、ここから pull_from_b |
-| | 5 | 4 3 1 2 | `pa` |
-| | 4 5 | 3 1 2 | `pa` |
-| | 3 4 5 | 1 2 | `pa` |
-| | 3 4 5 | 2 1 | `rb`（最大 rank が下半分にあった） |
-| | 2 3 4 5 | 1 | `pa` |
-| | 1 2 3 4 5 | — | `pa` 完了 |
+| 状態 | a (rank)                 | b (rank)                 | 次の操作                             |
+| ---- | ------------------------ | ------------------------ | ------------------------------------ |
+| 初期 | 2(1) 4(3) 5(4) 1(0) 3(2) | —                       | chunk_size=2, チャンク [0,2)         |
+|      | 4(3) 5(4) 1(0) 3(2)      | 2(1)                     | `pb`                               |
+|      | 5(4) 1(0) 3(2) 4(3)      | 2(1)                     | `ra`                               |
+|      | 1(0) 3(2) 4(3) 5(4)      | 2(1)                     | `ra`                               |
+|      | 3(2) 4(3) 5(4)           | 1(0) 2(1)                | `pb` → チャンク [2,4) へ          |
+|      | 4(3) 5(4)                | 3(2) 1(0) 2(1)           | `pb`                               |
+|      | 5(4)                     | 4(3) 3(2) 1(0) 2(1)      | `pb` → チャンク [4,6) へ          |
+|      | —                       | 5(4) 4(3) 3(2) 1(0) 2(1) | `pb`、ここから pull_from_b         |
+|      | 5                        | 4 3 1 2                  | `pa`                               |
+|      | 4 5                      | 3 1 2                    | `pa`                               |
+|      | 3 4 5                    | 1 2                      | `pa`                               |
+|      | 3 4 5                    | 2 1                      | `rb`（最大 rank が下半分にあった） |
+|      | 2 3 4 5                  | 1                        | `pa`                               |
+|      | 1 2 3 4 5                | —                       | `pa` 完了                          |
 
 合計 13 命令（pb×5, ra×2, pa×5, rb×1）。実際に `--bench` で確認できます。
 
@@ -486,20 +493,20 @@ int disorder_flg(double n)
 
 **実測（n=500 のランダム入力）**
 
-| 戦略 | 命令数 |
-| --- | --- |
-| `--simple` | 32255 |
-| `--medium` | 8259 |
-| `--complex` | 6784 |
+| 戦略           | 命令数                 |
+| -------------- | ---------------------- |
+| `--simple`   | 32255                  |
+| `--medium`   | 8259                   |
+| `--complex`  | 6784                   |
 | `--adaptive` | 6784（complex を選択） |
 
 **実測（n=5、`2 4 5 1 3`）**
 
-| 戦略 | 命令数 |
-| --- | --- |
-| `--simple` | 10 |
-| `--medium` | 13 |
-| `--complex` | 25 |
+| 戦略          | 命令数 |
+| ------------- | ------ |
+| `--simple`  | 10     |
+| `--medium`  | 13     |
+| `--complex` | 25     |
 
 小さい n では simple が最速です。基数ソートは `log2(n)` パスの固定コストがあるため、
 n が小さいうちは不利になります。adaptive の設計が意味を持つのはこの逆転があるからです。
@@ -616,16 +623,16 @@ valgrind --leak-check=full ./push_swap 5 3 9 1 7 2 > /dev/null
 
 自分で把握しておくべき「まだやっていないこと」「直せるところ」のリストです。
 
-| 項目 | 内容 |
-| --- | --- |
-| **bonus 未実装** | 自作の `checker` が無く、42配布の `checker_Mac` に依存している |
-| **`is_valid_number` の桁溢れ** | 20桁以上の入力で `long` がオーバーフローし、チェックをすり抜ける（§4 参照） |
-| **`rr` / `rrr` が未使用** | a と b を同時に回せば命令数を削れる余地がある |
-| **`swap_a_b` が `rank` を交換しない** | 今は無害だが、medium/complex に `sa` を足すと壊れる（§5 参照） |
-| **`ft_split` を3回呼んでいる** | `join_argv` した文字列を `check_duplicate` と `stack_init` が別々にパースしている |
-| **`stack_init` の malloc 失敗時** | 途中まで作ったリストを解放せず NULL を返す（リーク） |
-| **`chunk_rank` が O(n²)** | 命令数には影響しないが、n が大きいと実行時間に効く |
-| **`bring_chunk` の内部コスト** | `count_in_chunk` / `find_chunk_index` を毎ループ呼ぶため C 側の計算量は重め |
+| 項目                                            | 内容                                                                                    |
+| ----------------------------------------------- | --------------------------------------------------------------------------------------- |
+| **bonus 未実装**                          | 自作の `checker` が無く、42配布の `checker_Mac` に依存している                      |
+| **`is_valid_number` の桁溢れ**          | 20桁以上の入力で `long` がオーバーフローし、チェックをすり抜ける（§4 参照）          |
+| **`rr` / `rrr` が未使用**             | a と b を同時に回せば命令数を削れる余地がある                                           |
+| **`swap_a_b` が `rank` を交換しない** | 今は無害だが、medium/complex に `sa` を足すと壊れる（§5 参照）                       |
+| **`ft_split` を3回呼んでいる**          | `join_argv` した文字列を `check_duplicate` と `stack_init` が別々にパースしている |
+| **`stack_init` の malloc 失敗時**       | 途中まで作ったリストを解放せず NULL を返す（リーク）                                    |
+| **`chunk_rank` が O(n²)**              | 命令数には影響しないが、n が大きいと実行時間に効く                                      |
+| **`bring_chunk` の内部コスト**          | `count_in_chunk` / `find_chunk_index` を毎ループ呼ぶため C 側の計算量は重め         |
 
 ---
 
@@ -636,99 +643,118 @@ valgrind --leak-check=full ./push_swap 5 3 9 1 7 2 > /dev/null
 ### 全体設計
 
 **Q. なぜ4つもアルゴリズムを実装したのか？1つの賢いアルゴリズムで統一しないのか？**
+
 > 課題要件（VI.3.3）が O(n²) / O(n√n) / O(n log n) の3クラスをそれぞれ実装し、
 > disorder（乱雑度）に応じて切り替える adaptive を作ることを求めているため。
 > 実測（§6-4）でも、n が小さいときは simple が最速、ランダムに近いときは complex が最速、
 > と「常に同じアルゴリズムが最善」ではないことが確認できる。この逆転現象こそが adaptive の存在理由。
 
 **Q. `main.c` の処理順序を一言で説明すると？**
+
 > `setup_stack`（引数パース→重複/範囲チェック→リスト化→disorder計算）→
 > `run_algorithm`（opに応じて4アルゴリズムのどれかを実行、命令をstdoutへ即時出力）→
 > `--bench`ならstderrへ統計出力→`stack_free`で後始末。（§3の図を参照）
 
 **Q. なぜ引数を一度1本の文字列に結合（`join_argv`）しているのか？**
+
 > `./push_swap 3 1 2` と `./push_swap "3 1 2"` を同じ `ft_split` ベースの処理で扱えるようにするため。
 > 引数がシェルで複数トークンに分かれていても、クォートで1トークンになっていても結果が同じになる。
 
 ### データ構造
 
 **Q. `num` と `rank` を分けているのはなぜ？1つのフィールドで足りないのか？**
+
 > `num` は生の値（負数・飛び飛びの値を含む）。`rank`は「自分より小さい要素の個数」＝0〜n-1に圧縮した順位。
 > medium はチャンク境界を整数区間で切りたい、complex は順位をビット単位で見たい。
-> どちらも「隙間のない連続した0〜n-1の整数」が必要で、生の`num`のままでは負数や飛び飛びの値のせいで成立しない。
+> どちらも「隙間のない連続した0〜n-1の整数」が必要で、生の `num`のままでは負数や飛び飛びの値のせいで成立しない。
 
 **Q. 双方向連結リスト（`pre`/`next`）にした理由は？配列じゃダメなのか？**
+
 > `pa`/`pb`（先頭同士のつけ替え）はポインタ操作だけでO(1)。配列だと毎回シフトが必要でO(n)になる。
-> `pre`は`rra`/`rrb`（末尾を先頭に持ってくる）のときに「末尾の1つ前」を切り離すために必須
+> `pre`は `rra`/`rrb`（末尾を先頭に持ってくる）のときに「末尾の1つ前」を切り離すために必須
 > （`last->pre->next = NULL`、`rev_rotate_a_b.c:26`）。
 
 **Q. `t_ctx`のような構造体にまとめている理由は？**
-> Normの「関数の引数は4つまで」制限のため。stateをバラバラの変数で持つと`main`から呼ぶ関数の引数が
-> すぐ4つを超えてしまう。同じ理由で`t_arrs`（`ft_disoder.c`）や`t_bench`も存在する。
+
+> Normの「関数の引数は4つまで」制限のため。stateをバラバラの変数で持つと `main`から呼ぶ関数の引数が
+> すぐ4つを超えてしまう。同じ理由で `t_arrs`（`ft_disoder.c`）や `t_bench`も存在する。
 
 ### 引数処理
 
-**Q. `check_duplicate`が先で`stack_init`が後、なぜ2回パースしているのか非効率では？**
+**Q. `check_duplicate`が先で `stack_init`が後、なぜ2回パースしているのか非効率では？**
+
 > その通りで非効率だが、n≤500程度なら実行時間に影響しない（§11の改善余地に記載）。
 > 設計としては「バリデーション」と「構築」を関数の責務として分離した結果。
 
-**Q. `is_valid_number`が`+5`を弾く理由、`INT_MIN`はどう通しているか？**
-> 課題の入力形式に`+`は含まれないため未対応（弾いて`Error`）。
-> `INT_MIN = -2147483648`を通すために、負数のときだけ上限チェックを`2147483648`にしている
+**Q. `is_valid_number`が `+5`を弾く理由、`INT_MIN`はどう通しているか？**
+
+> 課題の入力形式に `+`は含まれないため未対応（弾いて `Error`）。
+> `INT_MIN = -2147483648`を通すために、負数のときだけ上限チェックを `2147483648`にしている
 > （`neg`フラグで分岐、`args_parse.c:83`）。
 
 **Q. オプションと数値の順序に制約はあるか？**
-> `parse_options`は`av[1]`から順に見て、`select_option`が0を返した（＝オプションでなくなった）時点で
+
+> `parse_options`は `av[1]`から順に見て、`select_option`が0を返した（＝オプションでなくなった）時点で
 > ループを抜ける。つまり**オプションは先頭にまとめる必要がある**。数値の後にオプションを書くと、
-> オプション文字列がそのまま数値としてパースされて`Error`になる。
+> オプション文字列がそのまま数値としてパースされて `Error`になる。
 
 ### アルゴリズム
 
 **Q. simpleが「選択ソート」だと言える根拠は？**
+
 > 毎回「未整列部分から最小値を探す」→「スタックの外（b）に置く」を繰り返す構造が選択ソートそのもの。
 > `find_min_index`で全走査しながら最小を探す部分がO(n)、それをn-2回繰り返すのでO(n²)。
 
 **Q. mediumの√nチャンクは、要素数が√nの倍数でなくても機能するか？**
-> する。`chunk_size`は`floor(sqrt(n))`を返すだけで、`bring_chunk`は最後のチャンクが半端な個数でも
+
+> する。`chunk_size`は `floor(sqrt(n))`を返すだけで、`bring_chunk`は最後のチャンクが半端な個数でも
 > `count_in_chunk`で実際にある個数だけループするため問題ない。
 
 **Q. complexがO(n log n)である根拠を数式で説明すると？**
-> `bit_size`が返すビット数は`ceil(log2(n))`。各ビットのパス（`radix_pass`内の1回のwhileループ）は
-> 全要素を1回ずつ`ra`か`pb`するのでO(n)。これを`log2(n)`回繰り返すので合計O(n log n)。
+
+> `bit_size`が返すビット数は `ceil(log2(n))`。各ビットのパス（`radix_pass`内の1回のwhileループ）は
+> 全要素を1回ずつ `ra`か `pb`するのでO(n)。これを `log2(n)`回繰り返すので合計O(n log n)。
 > 実測でもn=100で約1400命令、n×log2(n)の理論値と近い（§6-3）。
 
-**Q. なぜradix sortは`rank`のビットで振り分けても正しくソートできるのか？**
+**Q. なぜradix sortは `rank`のビットで振り分けても正しくソートできるのか？**
+
 > LSD基数ソートは安定ソート（同じキーの相対順序を保つ）だから。下位ビットで振り分けた結果の順序を
 > 保ったまま次のビットで振り分け直すことを繰り返すと、全ビット処理後には辞書式に完全昇順になる。
 > `rank`が0〜n-1の一意な整数なので、ビット表現がそのまま大小関係と一致する。
 
-**Q. simple/medium/complexの冒頭で`is_sorted`を呼んでいるのはなぜ？**
+**Q. simple/medium/complexの冒頭で `is_sorted`を呼んでいるのはなぜ？**
+
 > 課題が「最小の命令列」を要求しているため。すでに昇順ならアルゴリズムを実行せず即returnし、
 > 命令を1つも出力しない。
 
 ### disorder / adaptive
 
 **Q. disorderの計算にマージソートを使う理由は？O(n²)の総当たりではダメなのか？**
+
 > 総当たり（全ペア比較）でもdisorderの値自体は正しく計算できるが、O(n²)。マージソートの過程で
-> 転倒数を数える手法ならO(n log n)で同じ値が出せる（`do_merge`内の`inversions += (mid - i + 1)`が肝）。
+> 転倒数を数える手法ならO(n log n)で同じ値が出せる（`do_merge`内の `inversions += (mid - i + 1)`が肝）。
 > n=500でも一瞬で終わる、というのがこの実装を選んだ理由。
 
 **Q. 閾値0.2と0.5はどうやって決めたのか？**
+
 > 課題VI.3.3-4がそのまま指定している境界値（low<0.2、medium 0.2〜0.5、high≥0.5）。
 > 各区間にどのアルゴリズムを割り当てるかは自由だが、計算量クラスの上限だけは守る必要がある。
 
-**Q. `main.c`で`stack_size(*a) <= 6`のとき強制的に`dis_flg = 1`にしているのはなぜ？**
+**Q. `main.c`で `stack_size(*a) <= 6`のとき強制的に `dis_flg = 1`にしているのはなぜ？**
+
 > 要素数が少ないと、たとえdisorderの値が高くても基数ソート（complexの固定コストであるlog2(n)パス）は
 > 割に合わない。実測（§6-4のn=5の例）でもsimpleが最速。小規模入力を常にsimpleで捌くための最適化。
 
 ### メモリ・エラー処理
 
 **Q. メモリリークはどう検証したか？**
-> `valgrind --leak-check=full`（Linux）または`leaks`（Mac）で`stack_free(ctx.a)`/`stack_free(ctx.b)`後に
-> 未解放ブロックがないか確認（§10のコマンド集）。`stack_init`の`malloc`失敗時は例外的にリークする経路が
+
+> `valgrind --leak-check=full`（Linux）または `leaks`（Mac）で `stack_free(ctx.a)`/`stack_free(ctx.b)`後に
+> 未解放ブロックがないか確認（§10のコマンド集）。`stack_init`の `malloc`失敗時は例外的にリークする経路が
 > 残っている（§11）。
 
-**Q. エラー時になぜexit codeを変えず`return (0)`なのか？**
+**Q. エラー時になぜexit codeを変えず `return (0)`なのか？**
+
 > 課題が終了コードを明示的に要求していないため。`Error`はstderrへの出力（`write(2, "Error\n", 6)`）だけで
 > 判定する設計。
 
@@ -742,74 +768,162 @@ valgrind --leak-check=full ./push_swap 5 3 9 1 7 2 > /dev/null
 
 **要件**: 通常は `sa` `pb` … を1行ずつ標準出力するが、quiet モードでは個々の命令名を出さず、合計命令数だけを1行出力する。
 
-**解答**
+**解答（完全版・実際にこのコードベースで動作確認済み。オプション名は `--count-only`）**
 
-1. `t_bench` にフラグを1つ追加する
+1. `t_bench` にフラグを1つ追加し、`parse_options` のプロトタイプも一緒に直す
 
 ```c
 /* push_swap.h */
 typedef struct s_bench
 {
     ...
-    int    quiet;   // 1 なら操作列を出力しない
-}    t_bench;
+    int             total;
+    int             q;          // ★追加: 1なら操作列を出力しない
+}                   t_bench;
 ```
 
-2. `report_op` の出力部分だけ条件分岐で止める（カウントは今まで通り行う）
+```c
+/* push_swap.h: プロトタイプも忘れずに4引数へ */
+int                 parse_options(char **av, int *op, int *bench_flag,
+                        int *q);
+```
+
+2. `select_option` に `--count-only` の分岐を追加する
+
+```c
+/* args_parse.c */
+static int  select_option(char *av)
+{
+    if (ft_strcmp(av, "--simple") == 0)
+        return (1);
+    if (ft_strcmp(av, "--medium") == 0)
+        return (2);
+    if (ft_strcmp(av, "--complex") == 0)
+        return (3);
+    if (ft_strcmp(av, "--adaptive") == 0)
+        return (4);
+    if (ft_strcmp(av, "--bench") == 0)
+        return (5);
+    if (ft_strcmp(av, "--count-only") == 0)   // ★追加
+        return (6);
+    return (0);
+}
+```
+
+3. `parse_options` に `q` を立てる導線を追加する。**既存の `if / else if / else` の一続きの鎖を崩さないこと**（後述のハマりポイント参照）
+
+```c
+/* args_parse.c */
+int parse_options(char **av, int *op, int *bench_flag, int *q)
+{
+    int count;
+    int type;
+
+    count = 1;
+    *op = 0;
+    *bench_flag = 0;
+    *q = 0;                            // ★追加
+    while (av[count] != NULL)
+    {
+        type = select_option(av[count]);
+        if (type == 0)
+            break ;
+        if (type == 5 && *bench_flag == 1)
+            return (-1);
+        if (type == 5)
+            *bench_flag = 1;
+        else if (type == 6)            // ★ else if で追加(独立したifにしない)
+            *q = 1;
+        else if (*op != 0)
+            return (-1);
+        else
+            *op = type;
+        count++;
+    }
+    return (count);
+}
+```
+
+4. `report_op` の出力部分だけ条件分岐で止める（カウントは今まで通り行う）
 
 ```c
 /* bench_print.c */
 void    report_op(char *label, int len, int *counter, t_bench *bench)
 {
-    if (!bench->quiet)
+    if (!bench->q)
         write(1, label, len);
     (*counter)++;
     bench->total++;
 }
 ```
 
-3. `main.c` の `run_algorithm` の後に合計だけ出す
+5. `main.c` — 呼び出し側の引数を1つ増やし、`run_algorithm` の後に合計だけ出す
 
 ```c
-if (ctx.bench.quiet == 1)
+/* main.c: setup_stack内 */
+n = parse_options(av, &ctx->op, &ctx->bench_flag, &ctx->bench.q);
+```
+
+```c
+/* main.c: main()内、run_algorithmの直後 */
+run_algorithm(&ctx);
+if (ctx.bench.q)
 {
     ft_putnbr_fd(ctx.bench.total, 1);
     write(1, "\n", 1);
 }
+if (ctx.bench_flag == 1)
+    print_all_bench(&ctx);
 ```
 
-**なぜこの3箇所だけで済むか**
+**なぜこの5箇所だけで済むか**
 
 - 11命令はすべて `report_op` を経由して出力している（§5参照）ので、出力を止める変更点はここ1箇所だけで全命令に効く。
 - `bench->total` は `--bench` の有無に関わらず常にカウントされているので、quiet モードでも合計はすでに正しく積み上がっている。数え直す処理は不要。
-- `ft_bzero(&ctx, sizeof(t_ctx))` により `quiet` はデフォルト0なので、既存の動作（1行ずつ出力する通常モード）は変更されない。
+- `ft_bzero(&ctx, sizeof(t_ctx))` により `bench.q` はデフォルト0なので、既存の動作（1行ずつ出力する通常モード）は変更されない。
+- `parse_options` は `t_ctx` を直接触れない設計（個別ポインタしか受け取らない）なので、第4引数に `&ctx->bench.q` を素直に増やすのが最短ルート。`t_ctx` をまるごと渡すよう設計変更する必要はない。
 
-**この解答だけでは足りない点**
+**⚠️ ハマりポイント（実際に踏んだ失敗）**
 
-上のコードだけでは `bench.quiet` を1にする手段がありません。実際の試験では「`--quiet` オプションを追加せよ」まで含めて要求される可能性が高いです。追加するなら:
+① **`push_swap.h` のプロトタイプ更新忘れ** — `args_parse.c` 側だけ4引数にして `push_swap.h` の宣言を3引数のまま放置すると、`main.c` のコンパイルで宣言不一致エラーになりビルドが止まる。関数シグネチャを変えたら **定義・宣言・呼び出し元の3箇所** をセットで直す。
+
+② **`if (type == 6) *q = 1;` を独立した `if` にしてしまう**（最も踏みやすい罠）
 
 ```c
-/* args_parse.c: select_option に1行追加 */
-if (ft_strcmp(av, "--quiet") == 0)
-    return (6);
+/* NGパターン */
+if (type == 5)
+    *bench_flag = 1;
+if (type == 6)             // ← elseを忘れて独立したifにした
+    *q = 1;
+else if (*op != 0)
+    return (-1);
+else
+    *op = type;
 ```
 
-現在の `parse_options(char **av, int *op, int *bench_flag)` は `t_ctx` 全体ではなく個別のポインタしか受け取っていないため、そのままでは新しい `type == 6` を `bench.quiet` に書き込めません。素直に直すなら
+これだと `--bench`（type==5）を渡したとき、`*bench_flag = 1` が実行された**あと**に2つ目の if-else 鎖にも突入してしまう。`type` は6ではないので `else if (*op != 0)` → `*op` がまだ0なら `else` に落ちて **`*op = 5` が誤ってセットされる**。`run_algorithm` は `op` が1,2,3でも0,4でもない値（5）には何も反応しないため、**`--bench` を単体で使うとアルゴリズムが一切実行されなくなる**という静かな回帰が起きる。`else if (type == 6)` として元の一続きの鎖に組み込むのが正解。
 
-- 第4引数に `int *quiet` を追加して呼び出し側 (`main.c`) で `ctx->bench.quiet` に渡す、または
-- `parse_options` の戻り値（数値列の開始位置）を使って `main.c` 側で `av` をもう一度舐めて `--quiet` の有無を判定する
+**確認コマンド**
 
-のどちらかになります。試験本番では、この「`parse_options` が `t_ctx` を直接触れない設計になっている」という制約に自分で気づけるかがポイントです。
+```sh
+make re
+norminette args_parse.c push_swap.h main.c bench_print.c
+./push_swap --count-only 3 2 1                    # 合計数だけ出るか
+./push_swap --bench 3 2 1 2>&1 1>/dev/null          # --bench単体の回帰確認(②のバグが無いか)
+./push_swap --bench --count-only 4 67 3 87 23 2>&1 1>/dev/null   # 併用確認
+./push_swap 3 2 1                                   # オプションなしの通常出力の回帰確認
+./push_swap 5 4 3 2 1 | ./checker_Mac 5 4 3 2 1     # ソート結果自体の正当性(checker)
+```
 
 ---
 
 ## 付録: 用語ミニ辞典
 
-| 用語 | 意味 |
-| --- | --- |
-| **rank** | 「自分より小さい要素の個数」＝ 0〜n-1 の順位。値の圧縮 |
-| **disorder** | 逆転しているペアの割合。0.0 = 完全ソート済み、1.0 に近い = 完全逆順 |
-| **転倒数 (inversion)** | `i < j` かつ `a[i] > a[j]` となるペアの個数 |
-| **チャンク** | rank を √n 個ずつに区切ったグループ |
-| **LSD 基数ソート** | 最下位ビット (Least Significant Digit) から順に振り分ける基数ソート |
-| **Norm** | 42 のコーディング規約。関数25行以内、引数4つ以内、変数5つ以内など |
+| 用語                         | 意味                                                                |
+| ---------------------------- | ------------------------------------------------------------------- |
+| **rank**               | 「自分より小さい要素の個数」＝ 0〜n-1 の順位。値の圧縮              |
+| **disorder**           | 逆転しているペアの割合。0.0 = 完全ソート済み、1.0 に近い = 完全逆順 |
+| **転倒数 (inversion)** | `i < j` かつ `a[i] > a[j]` となるペアの個数                     |
+| **チャンク**           | rank を √n 個ずつに区切ったグループ                                |
+| **LSD 基数ソート**     | 最下位ビット (Least Significant Digit) から順に振り分ける基数ソート |
+| **Norm**               | 42 のコーディング規約。関数25行以内、引数4つ以内、変数5つ以内など   |
