@@ -118,3 +118,37 @@ Pylanceがファイルを開いた時点からstrictモードで型エラーを�
 
 - ホームディレクトリ（`/home/htakumi`）は42tokyoの5GBクォータ制限下にあるため、拡張機能インストール時に `ENOSPC` で失敗することがある。発生した場合はゴミ箱（`~/.local/share/Trash`）や古いキャッシュ、不要な提出物クローンの削除で対処した。
 - `/goinfre`, `/sgoinfre` はクォータ対象外の領域。恒久対策が必要なら `~/.vscode/extensions` 等をそちらにシンボリックリンクする選択肢もある（ただし `goinfre` はログアウトで消える場合がある点に注意）。
+
+---
+
+## Mac環境での差分
+
+上記は42校内Linux環境（goinfreやホームクォータがある前提）向けの内容。個人のMacで同じセットアップをする場合は以下が変わる。
+
+### `code` コマンドのパス
+
+Linuxでは `/usr/bin/code` に固定パスで存在したが、Macには標準でそのパスはない。VSCodeを起動し、コマンドパレット（`Cmd+Shift+P`）から以下を実行してPATHに通す。
+
+```
+Shell Command: Install 'code' command in PATH
+```
+
+有効化後は `code` コマンドとしてPATH経由で呼べるようになるので、エイリアスは固定パス不要。
+
+```bash
+# ~/.zshrc (Macでも標準シェルはzshなのでそのまま使える)
+alias code_p='code --profile=python'
+```
+
+### ディスククォータ・goinfre関連
+
+- 42校内特有のNFSマウント（`/goinfre`, `/sgoinfre`）や5GBホームクォータはMacには存在しない。「備考」セクションのENOSPC対処やシンボリックリンクの話はMacでは不要。
+- 自分のMacのディスク容量次第だが、基本的に容量不足でハマることは想定しにくい。
+
+### 変更不要な部分
+
+- プロファイル作成手順（`code --new-window --profile=python` でプロファイル作成、`code --profile=python --install-extension ...` で拡張機能インストール）
+- 拡張機能一覧・`settings.json` の内容（ruff設定、strict型チェック、cSpellのユーザー辞書パスなど）
+- フォーマット・デバッグ・スペルチェックの使い方
+
+これらはクロスプラットフォームな設定なので、そのままMacでも使える。
